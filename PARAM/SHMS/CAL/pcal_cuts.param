@@ -12,11 +12,6 @@ pcal_adc_tdc_offset=200.
 
 ; fall 2019 startup
 ; varaible = P.cal.pr.goodPos(Neg)AdcTdcDiffTime
-pcal_pos_AdcTimeWindowMin = -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30.
-pcal_neg_AdcTimeWindowMin = -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30., -30.
-
-pcal_pos_AdcTimeWindowMax = 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70.
-pcal_neg_AdcTimeWindowMax = 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70., 70.
 
 ; Threshold on selecting good adc is dynamic pedestal+pcal_AdcNegThreshold
 pcal_AdcNegThreshold = 0.
