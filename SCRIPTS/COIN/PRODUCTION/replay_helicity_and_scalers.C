@@ -1,4 +1,4 @@
-void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -26,7 +26,7 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   pathList.push_back("./cache");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "ROOTfiles/coin_replay_production_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/scaler_helicity_replay_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -48,7 +48,7 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
 
      // Dec data
-  //   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
+   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
   //=:=:=:=
   // SHMS 
   //=:=:=:=
@@ -103,8 +103,6 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Add event handler for scaler events
   THcScalerEvtHandler* pscaler = new THcScalerEvtHandler("P", "Hall C scaler event type 1");
   pscaler->AddEvtType(1);
-  pscaler->AddEvtType(2);
-  pscaler->AddEvtType(3);
   pscaler->AddEvtType(4);
   pscaler->AddEvtType(5);
   pscaler->AddEvtType(6);
@@ -114,14 +112,12 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   pscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(pscaler);
 
-  /*
   //Add SHMS event handler for helicity scalers
   THcHelicityScaler *phelscaler = new THcHelicityScaler("P", "Hall C helicity scaler");
   //phelscaler->SetDebugFile("PHelScaler.txt");
   phelscaler->SetROC(8);
   phelscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(phelscaler);
-  */
 
   
   //=:=:=
@@ -170,28 +166,23 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHaPhysics->Add(heff);
 
   // Add event handler for scaler events
-  THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");
-  hscaler->AddEvtType(1);
+  THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
   hscaler->AddEvtType(2);
-  hscaler->AddEvtType(3);
   hscaler->AddEvtType(4);
   hscaler->AddEvtType(5);
   hscaler->AddEvtType(6);
   hscaler->AddEvtType(7);
-  //  hscaler->AddEvtType(129);
-  hscaler->AddEvtType(131);
-  hscaler->SetDelayedType(131);
+  hscaler->AddEvtType(129);
+  hscaler->SetDelayedType(129);
   hscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(hscaler);
 
-  /*
   // Add HMS event handler for helicity scalers
   THcHelicityScaler *hhelscaler = new THcHelicityScaler("H", "Hall C helicity scaler");
   //hhelscaler->SetDebugFile("HHelScaler.txt");
   hhelscaler->SetROC(5);
   hhelscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(hhelscaler);
-  */
   
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Kinematics Modules
@@ -216,12 +207,8 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Suppress missing reference time warnings for these event types
   coin->SetEvtType(1);
   coin->AddEvtType(2);
-  TRG->AddDetector(coin);
+  TRG->AddDetector(coin); 
 
-  /*
-  THcHelicity* helicity = new THcHelicity("helicity", "Helicity Detector");
-  TRG->AddDetector(helicity);
-  */
   
   //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName, 
   // const char* elecArmName, const char* coinname) :
@@ -241,6 +228,9 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // tests/cuts, loops over Acpparatus's and PhysicsModules,
   // and executes the output routines.
   THcAnalyzer* analyzer = new THcAnalyzer;
+  analyzer->EnablePhysicsEvents(false);
+  std::cout << "The Physics Events are not replayed.\n";
+    
 
   // A simple event class to be output to the resulting tree.
   // Creating your own descendant of THaEvent is one way of
@@ -268,7 +258,7 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
 
   analyzer->SetEvent(event);
   // Set EPICS event type
-  analyzer->SetEpicsEvtType(182);
+  analyzer->SetEpicsEvtType(180);
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
   // Define output ROOT file
@@ -278,11 +268,11 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Define cuts file
   analyzer->SetCutFile("DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  //analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template
-  analyzer->PrintReport("TEMPLATES/COIN/PRODUCTION/coin_production.template",
-  			Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  //analyzer->PrintReport("TEMPLATES/COIN/PRODUCTION/coin_production.template",
+  //			Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_production_%d_%d.report", RunNumber, MaxEvent));  // optional
 
 }

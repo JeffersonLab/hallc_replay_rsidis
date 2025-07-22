@@ -4,17 +4,17 @@
 
 
 block T.shms.*
-block g*
+#block g*
 block P.ngcer.*
 block P.dc.*
 block P.hod.*
 block P.hgcer.*
 block P.aero.*
 block P.cal.*
-block P.tr.*
+#block P.tr.*
 block P.gtr.*
-#block P.kin.*
+block P.kin.*
 #block P.rb.*
-#block P.react.*
+block P.react.*
 #block P.extcor.*
 #block P.bcm.*

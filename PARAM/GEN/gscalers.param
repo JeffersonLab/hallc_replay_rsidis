@@ -9,11 +9,17 @@
 ;L175 modified: if(...=0.05) --> if(...=0.025) to get lowest current plateau
 
 ;Calibration based on 0, 1, 10 uA beam delivery, still need BCM calibration 4/7/2025
+;gNumBCMs    = 6
+;gBCM_Names  = " BCM1      BCM2      Unser	BCM4A    BCM4B   BCM4C"
+;gBCM_Gain   =   5701.8, 5518.8, 4000,  7150.06, 6214.46, 9987.6
+;gBCM_Offset = 4120.0, 252100.0, 327953, 4445.02, 2438.0, 3551
+
+;Calibration from run 23959 (Dave G's script)
 gNumBCMs    = 6
 gBCM_Names  = " BCM1      BCM2      Unser	BCM4A    BCM4B   BCM4C"
-gBCM_Gain   =   5701.8, 5518.8, 4000,  7150.0.06, 6214.46, 9987.6
-gBCM_Offset = 4120.0, 252100.0, 327953, 4445.02, 2438.0, 3551
+gBCM_Gain   =   5803.32, 5676.62, 400.6,  13417.81, 6429.0, 10523.47
+gBCM_Offset = 2385.0, 250382.0, 327953,59.57, 1170.92, 254.69
 
-gBCM_Current_threshold = 0.1
+gBCM_Current_threshold = 1.0
 ; index = 0 to gNumBCMs-1
 gBCM_Current_threshold_index = 5

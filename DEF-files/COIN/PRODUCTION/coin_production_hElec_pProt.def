@@ -1,27 +1,28 @@
 block T.coin.*
+# block T.helicity.*
 block CTime*
 
 block H.cer.*
 block H.dc.*
-block H.tr.*
+#block H.tr.*
 block H.hod.*
 block H.cal.*
 block H.gtr.*
 block H.kin.*
-block H.rb.*
+#block H.rb.*
 block H.react.*
 #block H.bcm.*
 
 block P.ngcer.*
 block P.dc.*
-block P.tr.*
+#block P.tr.*
 block P.hod.*
 block P.hgcer.*
 block P.aero.*
 block P.cal.*
 block P.gtr.*
 block P.kin.*
-block P.rb.*
+#block P.rb.*
 block P.react.*
 
 begin epics

@@ -16,9 +16,9 @@ void replay_no_reference_times_hms(Int_t RunNumber=0, Int_t MaxEvent=0) {
   }
 
   // Create file name patterns.
-  //const char* RunFileNamePattern = "hms_all_%05d.dat";
-  const char* RunFileNamePattern = "rsidis_production_%05d.dat";
+  const char* RunFileNamePattern = "rsidis_production_%05d.dat.0";
   vector<TString> pathList;
+  pathList.push_back("/net/cdaq/cdaql4data/hccoda/data/raw");
   pathList.push_back(".");
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");

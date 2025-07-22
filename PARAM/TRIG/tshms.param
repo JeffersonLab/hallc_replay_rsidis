@@ -8,7 +8,7 @@ t_shms_tdcchanperns = 0.09766
 
 ; cut variable is pT2
 ; determined for fall 2019 startup
-t_shms_trig_tdcrefcut = 10
+t_shms_trig_tdcrefcut = -8000
 ; cut variable is pFADC_TREF_ROC2
 ; determined for fall 2019 startup
 t_shms_trig_adcrefcut = -5500

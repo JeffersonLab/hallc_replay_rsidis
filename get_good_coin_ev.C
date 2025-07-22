@@ -3,7 +3,7 @@
   coincidence triggers required to get a desired number of good coincidence events.
   ----
   [terminal]$ root -l
-  root [0] .x coinT_ana.C(<run_number>,<nevents_replayed>,<desired_good_coin_events>)
+  root [0] .x get_good_coin_ev.C(<run_number>,<nevents_replayed>)
   ----
   P. Datta <pdbforce@jlab.org> Created 03 Mar 2025
 */
@@ -29,19 +29,19 @@
 // --- Basic ---
 // ---
 // 1. list of analysis cuts to apply
-std::string anacuts = "1"; //"abs(CTime.ePiCoinTime_ROC1)<100&&P.aero.npeSum>4&&abs(H.cal.etottracknorm-1)<0.3&&P.cal.etottracknorm<0.8&&H.cer.npeSum>1&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.&&abs(H.gtr.ph)<0.15&&abs(H.gtr.th)<0.2&&abs(P.gtr.ph)<0.15&&abs(P.gtr.th)<0.2";
+std::string anacuts = "P.aero.npeSum>4&&H.cal.etottracknorm>0.7&&P.cal.etottracknorm<0.8&&H.cer.npeSum>1&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.";
 // 2. histo ranges - Convention: {nbin,hmin,hmax}
-std::vector<double> hcoin_range{200,10,80};
-std::vector<double> hQ2_range{200,0.1,10},hx_range{200,0.01,1.2},hW_range{200,0.1,5},hz_range{200,0.01,1};
+std::vector<double> hcoin_range{200,10,90};
+std::vector<double> hQ2_range{200,0.1,10},hx_range{200,0.01,1.2},hW_range{200,0.1,5},hz_range{200,0.01,1.2},hMMpi_range{200,-0.5,8};
 // ---
 // --- Advanced (for experts) ---
 // ---
 // 1. ROOT tree branch to get coin time
-std::string coinTbranch = "CTime.ePiCoinTime_ROC1"; 
+std::string coinTbranch = "CTime.ePiCoinTime_ROC2"; 
 // 2. ns, Distance of the center of the block to choose randoms from the mean of the main coin peak
-double rndmscutdist = 20.;                  
+double rndmscutdist = 18.;                  
 // 3. Ratio of randoms cut region width to good coin cut region width
-double rndmscutfactor = 3.;
+double rndmscutfactor = 6.;
 // 4. Beam bunch structure (should be either 2 or 4 ns)
 double beambunchstruct = 4.;
 // --- **** ---
@@ -54,11 +54,16 @@ void PlotPtAccHisto(TH2* h2);
 void DetermineCoinCutRegion(TH1F* hcoin, double *fitparams, int verbosity, std::vector<double> &cutregion);
 void PlotCutRegion(double xmin, double xmax, EColor fcolor, double alpha);
 void ExtractCoinEvCounts(TH1F *hcoin, std::vector<double> const &cutregion, int verbosity, std::vector<double> &counts);
-double ExtractValueFromReportFile(const std::string& filename, const std::string& key, const char delimiter);
+double ExtractValueFromReportFile(const std::string& filename, const std::string& key, const char delimiter, int skipCount);
 void PredictNoOfTriggersNeeded(std::string const &inrepfile, std::vector<double> const &counts, double descoinev, int verbosity, std::vector<double> &outputs);
 double CalcNormYield(std::string const &inrepfile, double Nrealcoinev, int verbosity);
 std::vector<std::string> SplitString(char const delim, std::string const myStr);
-TPaveText* CreateSummaryPaveText(int rnum, const std::string& anacuts, const std::vector<double>& counts, double normyield, double descoinev, const std::vector<double>& predtrig, TStopwatch* sw);
+TPaveText* CreateSummaryPaveText(int rnum, ULong64_t totevintree, const std::string& anacuts, const std::vector<double>& counts, double normyield, double descoinev, const std::vector<double>& predtrig, TStopwatch* sw);
+TPaveText* CreateSummaryPaveText_new(int rnum, const std::string& anacuts, const std::vector<double>& counts, double normyield, double descoinev, const std::vector<double>& predtrig, TStopwatch* sw);
+void PrintCSVLine(std::ofstream &out, int runnum, double coinall, double randoms, double ransubcoin, double normyield);
+
+// global variables
+bool is_50k = false;
 
 // Main function
 int get_good_coin_ev(int rnum,                 // Run number to analyze
@@ -70,6 +75,8 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
 		     std::string outfilebase="output_get_good_coin_ev") // output filename prefix
 {
   gErrorIgnoreLevel = kError; // Ignores all ROOT warnings
+
+  if (nevent==50000) is_50k = true;
   
   // Define a clock to keep track of macro processing time
   TStopwatch *sw = new TStopwatch();
@@ -80,11 +87,16 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   ROOT::EnableImplicitMT();
   ROOT::RDataFrame data_rdf("T",inrfile.c_str());
   // Defining new columns
-  std::string z = "P.gtr.p/H.kin.primary.nu";
-  std::string pt = "sqrt(pow(P.gtr.p,2)*(1.-pow(cos(H.kin.primary.th_q),2)))";
-  std::string ptxacc = pt + "*cos(H.kin.primary.ph_q)";
-  std::string ptyacc = pt + "*sin(H.kin.primary.ph_q)";  
+  std::string Epi = "sqrt(pow(P.gtr.p,2) + 0.139*0.139)";
+  std::string z = Epi + "/H.kin.primary.nu";
+  std::string pt2 = "pow(P.gtr.p,2)*(1.-pow(cos(P.kin.secondary.th_xq),2))";
+  std::string pt = "sqrt(pow(P.gtr.p,2)*(1.-pow(cos(P.kin.secondary.th_xq),2)))";  
+  std::string ptxacc = pt + "*cos(P.kin.secondary.ph_xq)";
+  std::string ptyacc = pt + "*sin(P.kin.secondary.ph_xq)";
+  std::string mmpi = "H.kin.primary.Q2*((1.-H.kin.primary.x_bj)/H.kin.primary.x_bj)*(1.-"+z+")" + "+0.938*0.938-" + pt2+"/"+z;
+  //std::string mmpi = "pow(0.938+H.kin.primary.nu-"+Epi+",2.) - H.kin.primary.q3m*(H.kin.primary.q3m-2.*"+pt+")-pow(P.gtr.p,2)"; 
   auto data_rdf_raw = data_rdf.Define("z",z.c_str())
+    .Define("mmpi",mmpi.c_str())
     .Define("ptxacc",ptxacc.c_str())
     .Define("ptyacc",ptyacc.c_str());
 
@@ -110,7 +122,12 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   hz->GetXaxis()->SetTitle("z"); CustomizeHist(hz);
   TH1F *hW = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(H.kin.primary.W)<10")
     .Histo1D({"hW","",int(hW_range[0]),hW_range[1],hW_range[2]},"H.kin.primary.W")->Clone();
-  hW->GetXaxis()->SetTitle("W (GeV)"); CustomizeHist(hW);   
+  hW->GetXaxis()->SetTitle("W (GeV)"); CustomizeHist(hW);
+  // TH1F *hMMpi = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.kin.secondary.MMpi)<10")
+  //   .Histo1D({"hMMpi","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"P.kin.secondary.MMpi")->Clone();
+  TH1F *hMMpi = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.gtr.p)<10")
+    .Histo1D({"hMMpi","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"mmpi")->Clone();  
+  hMMpi->GetXaxis()->SetTitle("Missing Mass (GeV)"); CustomizeHist(hMMpi);     
   TH2F *h2ptaccp = (TH2F*)data_rdf_raw.Filter(anacuts+"&&abs(P.gtr.p)<10")
     .Histo2D({"h2ptaccp","",100,-1,1.,100,-1.,1.},"ptxacc","ptyacc")->Clone();
   // beta
@@ -150,14 +167,16 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   // Predicting the # triggers needed to get 100K good coin events
   std::string inrepfile = Form("%s/replay_coin_production_%d_%d.report",indirreport.c_str(),rnum,nevent); // input report file name with directory path
   std::vector<double> predtrig;
-  PredictNoOfTriggersNeeded(inrepfile,counts,descoinev,1,predtrig);
+  PredictNoOfTriggersNeeded(inrepfile,counts,descoinev,0,predtrig);
 
   // Calculate charge normalized and efficiency ccorrected yield
   double normyield = CalcNormYield(inrepfile,counts[2],0);
 
   // Write important stuff to a summary canvas
   ccoin->cd(2);
-  TPaveText* pvtxt = CreateSummaryPaveText(rnum, anacuts, counts, normyield, descoinev, predtrig, sw);
+  ULong64_t nEntries = *data_rdf.Count();
+  //std::cout << nEntries << "\n";
+  TPaveText* pvtxt = CreateSummaryPaveText(rnum, nEntries, anacuts, counts, normyield, descoinev, predtrig, sw);
   pvtxt->Draw();
   ccoin->Update();
   ccoin->Write("",TObject::kOverwrite);
@@ -184,6 +203,10 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   hW->Write("",TObject::kOverwrite);
   //
   cphys->cd(5);
+  hMMpi->Draw();
+  hMMpi->Write("",TObject::kOverwrite);  
+  //
+  cphys->cd(6);
   PlotPtAccHisto(h2ptaccp);
   h2ptaccp->Write("",TObject::kOverwrite);
   cphys->Update();
@@ -202,8 +225,6 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   h2pbetaVScoin->Write("",TObject::kOverwrite);
   cbeta->Write("",TObject::kOverwrite);
   
-  //fout->Write();
-  
   // Writing out the canvas
   TString outplot = Form("%s/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
   ccoin->SaveAs(Form("%s[",outplot.Data()));
@@ -212,7 +233,13 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   cbeta->SaveAs(Form("%s",outplot.Data()));  
   cbeta->SaveAs(Form("%s]",outplot.Data()));
 
+  // Writing out some useful stuff
+  std::string outcsv = Form("%s/%s_%d_%d.csv",indirreport.c_str(),outfilebase.c_str(),rnum,nevent);
+  std::ofstream outcsv_data(outcsv.c_str());
+  PrintCSVLine(outcsv_data,rnum,counts[0],counts[1],counts[2],normyield);  
+
   std::cout << "------" << std::endl;
+  std::cout << " Output CSV file  : " << outcsv << std::endl;  
   std::cout << " Output PDF file  : " << outplot << std::endl;
   std::cout << " Output ROOT file  : " << outfile << std::endl;  
   std::cout << "------" << std::endl << std::endl;
@@ -397,10 +424,11 @@ std::string normalizeSpaces(const std::string& str) {
   return std::regex_replace(str, std::regex("\\s+"), " ");
 }
 //----------------------------------------------------------
-double ExtractValueFromReportFile(const std::string& filename, const std::string& key, const char delimiter)
+double ExtractValueFromReportFile(const std::string& filename, const std::string& key, const char delimiter, int skipCount = 0)
 /*
   Reads the hcana report file and extracts the number (int or double) associated with
-  a given string and delimiter (: or =) ignoing any extra input (unit etc.) after the number  
+  a given string and delimiter (: or =), skipping `skipCount` number of valid matches
+  before returning the number.
 */
 {
   std::ifstream file(filename);
@@ -411,6 +439,7 @@ double ExtractValueFromReportFile(const std::string& filename, const std::string
 
   std::string line;
   std::string normalizedKey = normalizeSpaces(trim(key));  // Normalize the key once
+  int matchCount = 0;
 
   while (std::getline(file, line)) {
     std::string normalizedLine = normalizeSpaces(trim(line));  // Normalize spaces and trim
@@ -421,34 +450,32 @@ double ExtractValueFromReportFile(const std::string& filename, const std::string
     if (pos != std::string::npos) {
       bool validMatch = false;
 
-      // The key must either:
-      // - Be at the start of the line (pos == 0)
-      // - Be preceded by a space (to avoid substring issues like "SHMS" matching "HMS")
       if (pos == 0 || std::isspace(normalizedLine[pos - 1])) {
         size_t searchPos = pos + normalizedKey.length();
-
-        // Skip any spaces between key and delimiter
         while (searchPos < normalizedLine.length() && std::isspace(normalizedLine[searchPos])) {
           searchPos++;
         }
-
-        // Check if the next character is the delimiter
         if (searchPos < normalizedLine.length() && normalizedLine[searchPos] == delimiter) {
           validMatch = true;
         }
       }
 
       if (validMatch) {
-        std::istringstream iss(normalizedLine.substr(normalizedLine.find(delimiter) + 1));  // Extract substring after delimiter
+        if (matchCount < skipCount) {
+          matchCount++;
+          continue;  // Skip this occurrence
+        }
+
+        std::istringstream iss(normalizedLine.substr(normalizedLine.find(delimiter) + 1));
         double number;
-        if (iss >> number) {  // Read the number
+        if (iss >> number) {
           return number;
         }
       }
     }
   }
 
-  std::cerr << "Error: Key '" << key << "' doesn't exist!" << std::endl;
+  std::cerr << "Error: Key '" << key << "' not found after skipping " << skipCount << " occurrences." << std::endl;
   return -1;  // Indicate failure
 }
 //----------------------------------------------------------
@@ -486,10 +513,11 @@ double CalcNormYield(std::string const &inrepfile, // Input report file name wit
 		     int verbosity)
 /* Calculates charge normalized and efficiency corrected yeild from random subtracted coin events */
 {
-  double charge = ExtractValueFromReportFile(inrepfile, "HMS BCM4A Beam Cut Charge", ':'); //mC
-  double compdeadtime = ExtractValueFromReportFile(inrepfile, "HMS Computer Dead Time", ':')/100.0;
-  double treffiHMS = ExtractValueFromReportFile(inrepfile, "HMS E SING FID TRACK EFFIC", ':');  
-  double treffiSHMS = ExtractValueFromReportFile(inrepfile, "SHMS HADRON SING FID TRACK EFFIC", ':');
+  //double charge = ExtractValueFromReportFile(inrepfile, "HMS BCM4A Beam Cut Charge", ':'); //mC
+  double charge = ExtractValueFromReportFile(inrepfile, "SHMS BCM4B Beam Cut Charge", ':', 0); //mC  
+  double compdeadtime = ExtractValueFromReportFile(inrepfile, "HMS Computer Dead Time", ':', 0)/100.0;
+  double treffiHMS = ExtractValueFromReportFile(inrepfile, "E SING FID TRACK EFFIC", ':', 1);  
+  double treffiSHMS = ExtractValueFromReportFile(inrepfile, "HADRON SING FID TRACK EFFIC", ':', 0);
   double trigeffi = 1.0; // assuming 100% efficiency for the moment
 
   double normyield = Nrealcoinev / (charge * compdeadtime * treffiHMS * treffiSHMS * trigeffi); // 1/mC
@@ -566,13 +594,13 @@ void PlotPtAccHisto(TH2* h2) {
   t->DrawLatex(0, -1.08, "#phi_{h}=270#circ");
 }
 //----------------------------------------------------------
-TPaveText* CreateSummaryPaveText(int rnum, const std::string& anacuts,
+TPaveText* CreateSummaryPaveText_old(int rnum, const std::string& anacuts,
                                   const std::vector<double>& counts,
                                   double normyield,
                                   double descoinev,
                                   const std::vector<double>& predtrig,
                                   TStopwatch* sw)
-/* Function to create a summary canvas */
+/* Function to create a summary canvas (old) */
 {  
   TPaveText* pvtxt = new TPaveText(.05, .1, .95, .8);
   pvtxt->SetTextFont(42);
@@ -614,6 +642,107 @@ TPaveText* CreateSummaryPaveText(int rnum, const std::string& anacuts,
   if (TText* t6 = pvtxt->GetLineWith("Macro")) t6->SetTextColor(kGreen+3);
 
   return pvtxt;
+}
+//----------------------------------------------------------
+TPaveText* CreateSummaryPaveText(int rnum,
+				 ULong64_t totevintree,
+				 const std::string& anacuts,
+				 const std::vector<double>& counts,
+				 double normyield,
+				 double descoinev,
+				 const std::vector<double>& predtrig,
+				 TStopwatch* sw)
+/* Function to create a summary canvas */
+{  
+  TPaveText* pvtxt = new TPaveText(.05, .1, .95, .8);
+  pvtxt->SetTextFont(42);
+  pvtxt->SetTextSize(0.03);
+
+  pvtxt->AddText(Form("Run Number : %d", rnum));
+  pvtxt->AddText("Analysis cuts:");
+  std::vector<std::string> aCutList = SplitString('&', anacuts.c_str());
+  std::string tmpstr = "";
+  int ccount = 0;
+  for (std::size_t i = 0; i < aCutList.size(); ++i) {
+    if (i > 0 && i % 3 == 0) {
+      pvtxt->AddText(Form(" %s", tmpstr.c_str()));
+      tmpstr = "";
+    }
+    ccount++;
+    tmpstr += aCutList[i];
+    if (ccount != aCutList.size()) tmpstr += ", ";
+
+    if ((aCutList.size() - i) < 3 && ccount == aCutList.size()) {
+      pvtxt->AddText(Form(" %s", tmpstr.c_str()));
+      tmpstr = "";
+    }
+  }
+  pvtxt->AddText("Counts:");
+  pvtxt->AddText(Form("Number of Real (Randoms Subtracted) Coin Events : %.0f", counts[2]));
+  pvtxt->AddText(Form("Charge Normalized and Efficiency Corrected Yield : %.1f (1/mC)", normyield));
+  pvtxt->AddText(Form("Rate of Good Coin Events : %.4f per CODA event", (double)counts[2]/(double)totevintree));
+  sw->Stop();
+  if (is_50k) {
+    pvtxt->AddText("Predictions");
+    pvtxt->AddText("To get \"Extrapolated # good events (this run)\" for the run sheet:");
+    pvtxt->AddText(Form("Multiply the rate of good coin events w/ total CODA events, once the run is complete."));
+  }
+  else {
+    pvtxt->AddText(Form("Macro processing time: CPU %.1fs | Real %.1fs", sw->CpuTime(), sw->RealTime()));
+  }
+    
+  // Highlight key lines
+  if (TText* t1 = pvtxt->GetLineWith("Run")) t1->SetTextColor(kGreen + 3);
+  if (TText* t2 = pvtxt->GetLineWith("Analysis")) t2->SetTextColor(kBlue);
+  if (TText* t3 = pvtxt->GetLineWith("Counts")) t3->SetTextColor(kBlue);
+  if (TText* t4 = pvtxt->GetLineWith("Predictions")) t4->SetTextColor(kBlue);
+  if (TText* t5 = pvtxt->GetLineWith("Rate of Good")) t5->SetTextColor(kRed);
+  if (TText* t6 = pvtxt->GetLineWith("To get")) {
+    t6->SetTextColor(kGreen + 3);
+    t6->SetTextFont(62);
+  }
+  if (TText* t7 = pvtxt->GetLineWith("Multiply")) t7->SetTextColor(kRed);
+  if (TText* t8 = pvtxt->GetLineWith("Macro")) t8->SetTextColor(kGreen+3);
+  return pvtxt;
+}
+// //----------------------------------------------------------
+// void PrintCSVLine(int runnum, double coin, double randoms,
+//                   double ransubcoin, double hmseffi,
+//                   double shmseffi, double charge, double normyield) {
+
+//   double beamcurr = ExtractValueFromReportFile(inrepfile, "SHMS BCM4B Beam Cut Charge", ':', 0); //uA
+//   double charge = ExtractValueFromReportFile(inrepfile, "SHMS BCM4B Beam Cut Charge", ':', 0); //mC
+//   double compdeadtime = ExtractValueFromReportFile(inrepfile, "HMS Computer Dead Time", ':', 0)/100.0;
+//   double treffiHMS = ExtractValueFromReportFile(inrepfile, "E SING FID TRACK EFFIC", ':', 1);  
+//   double treffiSHMS = ExtractValueFromReportFile(inrepfile, "E SING FID TRACK EFFIC", ':', 0);  
+  
+  
+//   std::ostringstream oss;
+//   oss << runnum << ","
+//       << beamcurr << ","
+//       << coin << ","
+//       << randoms << ","
+//       << ransubcoin << ","
+//       << deadtime << ","
+//       << hmseffi << ","
+//       << shmseffi << ","
+//       << charge << ","
+//       << normyield;
+
+//   std::cout << oss.str() << std::endl;
+// }
+//----------------------------------------------------------
+void PrintCSVLine(std::ofstream &out, int runnum, double coinall, double randoms, double ransubcoin, double normyield) {
+  
+  std::ostringstream oss;
+  oss << "runnum,coin,randoms,ransubcoin,normyield\n";
+  oss << runnum << ","
+      << coinall << ","
+      << randoms << ","
+      << ransubcoin << ","    
+      << normyield;
+
+  out << oss.str() << std::endl;
 }
 
 /* extra stuff 

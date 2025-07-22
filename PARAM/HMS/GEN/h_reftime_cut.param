@@ -19,7 +19,7 @@
 ; cut variable = hDCREF2
 hdc_tdcrefcut=-20000
 ; cut variable = hT2
-hhodo_tdcrefcut=-1750
+hhodo_tdcrefcut=-31000
 ; cut variable = hFADC_TREF_ROC1
 hhodo_adcrefcut=-4100
 hcer_adcrefcut=-4100

@@ -6,7 +6,7 @@ block D.*
 block T.hms.*
 block H.cer.*
 block H.dc.*
-block H.tr.*
+#block H.tr.*
 block H.hod.*
 block H.cal.*
 block H.gtr.*

@@ -4,7 +4,7 @@
 ;              kami kaze events which hang the analyzer to a long time.
 
 ; Tracking parameters
-  pmax_pr_hits = 25, 25
+  pmax_pr_hits = 50, 50
 
 ; pminhit(i)   minimum number of hits in each space point (one for each chamber)
 pmin_hit = 5,5
@@ -25,7 +25,7 @@ pntracks_max_fp = 10
 ; focal plane position to link stubs to tracks
   pntracks_max_fp = 10
   pxt_track_criterion = 100.0
-  pyt_track_criterion = 20.0
+  pyt_track_criterion = 100.0
   pxpt_track_criterion = 1.0
   pypt_track_criterion = 1.0
 
@@ -46,7 +46,7 @@ pstub_max_xpdiff=.2
 ; psel_using_scin         uses scintillator for track selection
   psel_using_scin = 0
 ; psel_using_prune         using prune
-  psel_using_prune = 0
+  psel_using_prune = 1
 
 ; parameters used in selecting tracks for Hodoscope efficiency in THcHodoEff.cxx
 ;   HodoEff_CalEnergy_Cut  cut on the track energy (GeV)

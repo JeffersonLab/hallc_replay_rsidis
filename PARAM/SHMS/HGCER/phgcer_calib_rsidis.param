@@ -1,0 +1,2 @@
+; calibration from SHMS run 23856 RSIDIS
+phgcer_adc_to_npe = 1.0/3.846, 1.0/4.097, 1.0/4.102, 1.0/5.059

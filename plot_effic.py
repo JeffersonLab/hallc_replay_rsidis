@@ -55,7 +55,7 @@ ax.set_ylabel("Tracking Efficiency")
 ax.set_title("Tracking Efficiencies")
 ax.set_xticks(x)
 ax.set_xticklabels(metrics)
-ax.set_ylim(0.9, 1.01)
+ax.set_ylim(0.7, 1.01)
 ax.legend()
 ax.grid(True, linestyle='--', alpha=0.5)
 
