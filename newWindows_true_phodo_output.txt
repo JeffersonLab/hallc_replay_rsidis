@@ -1,0 +1,24 @@
+phodo_1x_good_adctdc_diff_time_vs_pmt_pos
+phodo_1x_PosAdcTimeWindowMin= 2.5, 2.5, 6.5, 5.5, 6.5, 5.5, 6.5, 3.5, 6.5, 6.5, 6.5, 6.5, 5.5
+phodo_1x_PosAdcTimeWindowMax= 42.5, 42.5, 46.5, 45.5, 46.5, 45.5, 46.5, 43.5, 46.5, 46.5, 46.5, 46.5, 45.5
+phodo_1x_good_adctdc_diff_time_vs_pmt_neg
+phodo_1x_NegAdcTimeWindowMin= -1.5, -1.5, -0.5, -3.5, -4.5, -1.5, -0.5, -0.5, -0.5, 0.5, -3.5, -0.5, -1.5
+phodo_1x_NegAdcTimeWindowMax= 38.5, 38.5, 39.5, 36.5, 35.5, 38.5, 39.5, 39.5, 39.5, 40.5, 36.5, 39.5, 38.5
+phodo_1y_good_adctdc_diff_time_vs_pmt_pos
+phodo_1y_PosAdcTimeWindowMin= 6.5, 6.5, 7.5, 6.5, 5.5, 5.5, 6.5, 5.5, 5.5, 1.5, 2.5, 5.5, 5.5
+phodo_1y_PosAdcTimeWindowMax= 46.5, 46.5, 47.5, 46.5, 45.5, 45.5, 46.5, 45.5, 45.5, 41.5, 42.5, 45.5, 45.5
+phodo_1y_good_adctdc_diff_time_vs_pmt_neg
+phodo_1y_NegAdcTimeWindowMin= 6.5, 5.5, 6.5, 6.5, 6.5, 5.5, 7.5, 6.5, 6.5, 5.5, 5.5, 4.5, 5.5
+phodo_1y_NegAdcTimeWindowMax= 46.5, 45.5, 46.5, 46.5, 46.5, 45.5, 47.5, 46.5, 46.5, 45.5, 45.5, 44.5, 45.5
+phodo_2x_good_adctdc_diff_time_vs_pmt_pos
+phodo_2x_PosAdcTimeWindowMin= 5.5, 5.5, 6.5, 2.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 6.5, 6.5, 1.5, 1.5
+phodo_2x_PosAdcTimeWindowMax= 45.5, 45.5, 46.5, 42.5, 45.5, 45.5, 45.5, 45.5, 45.5, 45.5, 46.5, 46.5, 41.5, 41.5
+phodo_2x_good_adctdc_diff_time_vs_pmt_neg
+phodo_2x_NegAdcTimeWindowMin= -1.5, -0.5, -1.5, -0.5, -1.5, -0.5, -0.5, -1.5, -1.5, -1.5, -0.5, -0.5, -1.5, -1.5
+phodo_2x_NegAdcTimeWindowMax= 38.5, 39.5, 38.5, 39.5, 38.5, 39.5, 39.5, 38.5, 38.5, 38.5, 39.5, 39.5, 38.5, 38.5
+phodo_2y_good_adctdc_diff_time_vs_pmt_pos
+phodo_2y_PosAdcTimeWindowMin= -20, -20, 22.5, 21.5, 21.5, 20.5, 22.5, 21.5, 21.5, 21.5, 21.5, 18.5, 21.5, 22.5, 22.5, 22.5, 22.5, 21.5, -20, -20, -20
+phodo_2y_PosAdcTimeWindowMax= 20, 20, 62.5, 61.5, 61.5, 60.5, 62.5, 61.5, 61.5, 61.5, 61.5, 58.5, 61.5, 62.5, 62.5, 62.5, 62.5, 61.5, 20, 20, 20
+phodo_2y_good_adctdc_diff_time_vs_pmt_neg
+phodo_2y_NegAdcTimeWindowMin= -20, -20, 16.5, 15.5, 15.5, 14.5, 15.5, 15.5, 14.5, 14.5, 13.5, 14.5, 14.5, 14.5, 14.5, 15.5, 11.5, 14.5, -20, -20, -20
+phodo_2y_NegAdcTimeWindowMax= 20, 20, 56.5, 55.5, 55.5, 54.5, 55.5, 55.5, 54.5, 54.5, 53.5, 54.5, 54.5, 54.5, 54.5, 55.5, 51.5, 54.5, 20, 20, 20

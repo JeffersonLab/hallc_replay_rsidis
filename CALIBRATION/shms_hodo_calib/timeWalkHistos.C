@@ -60,9 +60,9 @@ static const Double_t adcChanTomV     = adcDynamicRange/nAdcChan; // Units of mV
 
 static const Double_t hodoPulseAmpCutLow     = 15.0;   // Units of mV
 static const Double_t hodoPulseAmpCutHigh    = 1000.0; // Units of mV
-static const Double_t refAdcPulseAmpCutLow   = 40.0;   // Units of mV
+static const Double_t refAdcPulseAmpCutLow   = 25.0;   // Units of mV. previous 40
 static const Double_t refAdcPulseAmpCutHigh  = 70.0;   // Units of mV
-static const Double_t refAdcPulseTimeCutLow  = 300.0;  // Units of ns
+static const Double_t refAdcPulseTimeCutLow  = 180.0;  // Units of ns. previous 300
 static const Double_t refAdcPulseTimeCutHigh = 370.0;  // Units of ns
 static const Double_t adcTdcTimeDiffCutLow   = 0.0; // Units of ns
 static const Double_t adcTdcTimeDiffCutHigh  = 100.0;  // Units of ns
@@ -197,13 +197,13 @@ void generatePlots(UInt_t iplane, UInt_t iside, UInt_t ipaddle) {
   // Book histos
   if (!h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] && !TimeWalkRangeSet){ // NH 2021 11 26 changed this so that each plane could have the y-range set seperately
     if (iplane == 0)
-      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, 15, 35);
+      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, -100, 100);
     if(iplane == 1)
-      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, 20, 40);
+      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, -100, 100);
     if(iplane == 2)
-      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, 15, 35);
+      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, -100, 100);
     if(iplane == 3)
-      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, 33, 53);
+      h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, -100, 100);
   }else{
     if(!h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] && TimeWalkRangeSet)
       h2_adcTdcTimeDiffWalk[iplane][iside][ipaddle] = new TH2F(Form("h2_adcTdcTimeDiffWalk_paddle_%d", ipaddle+1), "TDC-ADC Time vs. Pulse Amp Plane "+planeNames[iplane]+" Side "+sideNames[iside]+Form(" Paddle %d", ipaddle+1)+"; Pulse Amplitude (mV) / 1 mV;  TDC-ADC Time (ns) / 100 ps", 500, 0, 500, 1500, adcTdcTimeDiffCutLow, adcTdcTimeDiffCutHigh);
@@ -474,8 +474,12 @@ void timeWalkHistos(TString inputname, Int_t runNum, string SPEC_flg) {  //SPEC_
 	  adcRefMultiplicityCut = (refAdcMultiplicity < 1.0); //cut only zeros
 	  adcRefPulseAmpCut     = (refAdcPulseAmp < refAdcPulseAmpCutLow || refAdcPulseAmp > refAdcPulseAmpCutHigh);
 	  adcRefPulseTimeCut    = (refAdcPulseTimeRaw*adcChanToTime < refAdcPulseTimeCutLow || refAdcPulseTimeRaw*adcChanToTime > refAdcPulseTimeCutHigh);
+	  cout << "\nadcRefMultiplicityCut , adcRefPulseAmpCut , adcRefPulseTimeCut = " << adcRefMultiplicityCut << " , " << adcRefPulseAmpCut << " , " << adcRefPulseTimeCut << endl;
+
 	  // Implement cuts
 	  if (adcRefMultiplicityCut || adcRefPulseAmpCut || adcRefPulseTimeCut) continue;	  
+	  cout << "/nDebug: Inside Implement cuts" << endl;
+
 	  // Acquire the hodoscope ADC data objects
 	  if(signalNames[isignal] == "Adc") { 
 	    // Loop over the signals again
@@ -490,6 +494,8 @@ void timeWalkHistos(TString inputname, Int_t runNum, string SPEC_flg) {  //SPEC_
 		  for (Int_t iadchit = 0; iadchit < numAdcHits; iadchit++) {
 		    // Obtain variables
 		    adcPaddleNum    = UInt_t (adcPaddle[iplane][iside][isignal][iadchit]);
+		    cout << "\nDebug: adcPaddleNum = " << adcPaddleNum << endl;
+
 		    adcErrorFlag    = hodoAdcErrorFlag[iplane][iside][isignal][iadchit];
 		    adcPulseTimeRaw = hodoAdcPulseTimeRaw[iplane][iside][isignal][iadchit]*adcChanToTime;
 		    adcPulseTime    = adcPulseTimeRaw - refAdcPulseTimeRaw*adcChanToTime;
@@ -511,15 +517,23 @@ void timeWalkHistos(TString inputname, Int_t runNum, string SPEC_flg) {  //SPEC_
 		      for (Int_t itdchit = 0; itdchit < numTdcHits; itdchit++) {
 			// Obtain variables
 			tdcPaddleNum   = UInt_t (tdcPaddle[iplane][iside][jsignal][itdchit]);
+			cout << "\nDebug: tdcPaddleNum = " << tdcPaddleNum << endl;
+
 			tdcTimeRaw     = hodoTdcTimeRaw[iplane][iside][jsignal][itdchit]*tdcChanToTime;
 			if (iplane == 3 && iside == 0) tdcTime = tdcTimeRaw - refT2TdcTimeRaw*tdcChanToTime;
 			else tdcTime = tdcTimeRaw - refT1TdcTimeRaw*tdcChanToTime;
 			adcTdcTimeDiff = tdcTime - adcPulseTime;
+			cout << "\nDebug: adcTdcTimeDiff = " << adcTdcTimeDiff << endl;
+
 			// Define cuts
 			adcAndTdcHitCut   = (adcPaddleNum != tdcPaddleNum);
 			adcTdcTimeDiffCut = (adcTdcTimeDiff < adcTdcTimeDiffCutLow || adcTdcTimeDiff > adcTdcTimeDiffCutHigh);
+			cout << "\nDebug: adcAndTdcHitCut and adcTdcTimeDiffCut = " << adcAndTdcHitCut << " , " << adcTdcTimeDiffCut << endl;
+
 			// Implement cuts
 			if (adcAndTdcHitCut || adcTdcTimeDiffCut) continue;
+			cout << "\nDebug: if condition executed. Histo is not populated" << endl;
+
 			h2_adcPulseAmpCuts[iplane][iside]->Fill(tdcPaddleNum, adcPulseAmp);
 			h2_adcTdcTimeDiff[iplane][iside]->Fill(tdcPaddleNum, adcTdcTimeDiff);
 			h2_adcTimeWalk[iplane][iside][tdcPaddleNum-1]->Fill(adcPulseAmp, adcPulseTime);

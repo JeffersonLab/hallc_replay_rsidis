@@ -298,12 +298,12 @@ void fitHodoCalib(TString filename,Int_t runNUM,Bool_t cosmic_flag=kFALSE)
 	       
 	       
 	       //----Define TTree Leaf Names-----
-	       base = spec + "." + det + "." + pl_names[npl];
+	       base = spec + "." + det + "." + pl_names[npl].c_str();
 	       
-	       nTdcTimeUnCorr = base + "." + side_names[side] + "TdcTimeUnCorr";
-	       nTdcTimeTWCorr = base + "." + side_names[side] + "TdcTimeWalkCorr";
-	       nAdcPulseTime = base + "." + side_names[side] + "AdcPulseTime";
-	       nAdcPulseAmp = base + "." + side_names[side] + "AdcPulseAmp";
+	       nTdcTimeUnCorr = base + "." + side_names[side].c_str() + "TdcTimeUnCorr";
+	       nTdcTimeTWCorr = base + "." + side_names[side].c_str() + "TdcTimeWalkCorr";
+	       nAdcPulseTime = base + "." + side_names[side].c_str() + "AdcPulseTime";
+	       nAdcPulseAmp = base + "." + side_names[side].c_str() + "AdcPulseAmp";
 	       nDiffTWCorr = base + "." + "DiffDisTrackCorr";
 	       nTrackXPos = base + "." + "TrackXPos";
 	       nTrackYPos = base + "." + "TrackYPos";
