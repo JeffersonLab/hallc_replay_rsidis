@@ -35,3 +35,5 @@ TH2F pcal_shwr_good_pped_vs_pmt_grp12 'SHMS Shower Good Pulse Pedestal vs. PMT N
 TH2F pcal_shwr_good_pped_vs_pmt_grp13 'SHMS Shower Good Pulse Pedestal vs. PMT Number; PMT Number; Good Pulse Pedestal / 0.25 mV' [I+1] P.cal.fly.goodAdcPed 16 192.5 208.5 200 20 100 P.cal.fly.goodAdcPed>0.0
 TH2F pcal_shwr_good_pped_vs_pmt_grp14 'SHMS Shower Good Pulse Pedestal vs. PMT Number; PMT Number; Good Pulse Pedestal / 0.25 mV' [I+1] P.cal.fly.goodAdcPed 16 208.5 224.5 200 20 100 P.cal.fly.goodAdcPed>0.0
 
+TH1F pcal_shwr_raw_atime 'SHMS Shower ADC Pulse Time (Raw); ADC Pulse Time (Raw); Number of Entries' P.cal.fly.adcPulseTimeRaw 100 0. 8000.
+

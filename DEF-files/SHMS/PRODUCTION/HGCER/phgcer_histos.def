@@ -12,7 +12,7 @@ TH1F phgcer_good_occ 'SHMS Heavy Gas Cherenkov Good Occupancy; PMT Number; Numbe
 TH1F phgcer_good_mult 'SHMS Heavy Gas Cherenkov Good Multiplicity; Number of PMTs Hit; Total Number of Good ADC Hits' P.hgcer.totNumGoodAdcHits 4 0.5 4.5
 
 TH2F phgcer_npe 'SHMS Heavy Gas Cherenkov NPE vs. PMT Number; PMT Number; NPE / 0.5 Photoelectrons' [I+1] P.hgcer.npe 4 0.5 4.5 60 0 30 P.hgcer.npe>0.0 
-# TH1F phgcer_tot_npe 'SHMS Heavy Gas Cherenkov Total NPE; Total NPE; Number of Entries / 0.5 Photoelectrons' P.hgcer.npeSum 100 0 50 P.hgcer.npeSum>0.0 
+TH1F phgcer_tot_npe 'SHMS Heavy Gas Cherenkov Total NPE; Total NPE; Number of Entries' P.hgcer.npeSum 100 0 50 P.hgcer.npeSum>0.0 
 
 #-------------------------
 # SHMS HGC TRACK MATCHING

@@ -29,7 +29,7 @@
 // --- Basic ---
 // ---
 // 1. list of analysis cuts to apply
-std::string anacuts = "P.aero.npeSum>4&&H.cal.etottracknorm>0.7&&P.cal.etottracknorm<0.8&&H.cer.npeSum>1&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.";
+std::string anacuts = "P.hgcer.npeSum>1&&P.aero.npeSum>4&&H.cer.npeSum>2&&H.cal.etottracknorm>0.7&&P.cal.etottracknorm<0.8&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.";
 // 2. histo ranges - Convention: {nbin,hmin,hmax}
 std::vector<double> hcoin_range{200,10,90};
 std::vector<double> hQ2_range{200,0.1,10},hx_range{200,0.01,1.2},hW_range{200,0.1,5},hz_range{200,0.01,1.2},hMMpi_range{200,-0.5,8};
@@ -93,7 +93,8 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   std::string pt = "sqrt(pow(P.gtr.p,2)*(1.-pow(cos(P.kin.secondary.th_xq),2)))";  
   std::string ptxacc = pt + "*cos(P.kin.secondary.ph_xq)";
   std::string ptyacc = pt + "*sin(P.kin.secondary.ph_xq)";
-  std::string mmpi = "H.kin.primary.Q2*((1.-H.kin.primary.x_bj)/H.kin.primary.x_bj)*(1.-"+z+")" + "+0.938*0.938-" + pt2+"/"+z;
+  // MMpi^2 = Q2 * ((1-x)/x) * (1-z) + Mp^2 - pt^2/z;
+  std::string mmpi = "sqrt(H.kin.primary.Q2*((1.-H.kin.primary.x_bj)/H.kin.primary.x_bj)*(1.-"+z+")" + "+0.938*0.938-" + pt2+"/"+z+")";
   //std::string mmpi = "pow(0.938+H.kin.primary.nu-"+Epi+",2.) - H.kin.primary.q3m*(H.kin.primary.q3m-2.*"+pt+")-pow(P.gtr.p,2)"; 
   auto data_rdf_raw = data_rdf.Define("z",z.c_str())
     .Define("mmpi",mmpi.c_str())
@@ -123,10 +124,10 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   TH1F *hW = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(H.kin.primary.W)<10")
     .Histo1D({"hW","",int(hW_range[0]),hW_range[1],hW_range[2]},"H.kin.primary.W")->Clone();
   hW->GetXaxis()->SetTitle("W (GeV)"); CustomizeHist(hW);
-  // TH1F *hMMpi = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.kin.secondary.MMpi)<10")
-  //   .Histo1D({"hMMpi","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"P.kin.secondary.MMpi")->Clone();
-  TH1F *hMMpi = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.gtr.p)<10")
-    .Histo1D({"hMMpi","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"mmpi")->Clone();  
+  TH1F *hMMpi = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.kin.secondary.MMpi)<10")
+    .Histo1D({"hMMpi","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"P.kin.secondary.MMpi")->Clone();
+  TH1F *hMMpi_pd = (TH1F*)data_rdf_raw.Filter(anacuts+"&&abs(P.gtr.p)<10")
+    .Histo1D({"hMMpi_pd","",int(hMMpi_range[0]),hMMpi_range[1],hMMpi_range[2]},"mmpi")->Clone();  
   hMMpi->GetXaxis()->SetTitle("Missing Mass (GeV)"); CustomizeHist(hMMpi);     
   TH2F *h2ptaccp = (TH2F*)data_rdf_raw.Filter(anacuts+"&&abs(P.gtr.p)<10")
     .Histo2D({"h2ptaccp","",100,-1,1.,100,-1.,1.},"ptxacc","ptyacc")->Clone();
@@ -204,7 +205,8 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   //
   cphys->cd(5);
   hMMpi->Draw();
-  hMMpi->Write("",TObject::kOverwrite);  
+  hMMpi->Write("",TObject::kOverwrite);
+  hMMpi_pd->Write("",TObject::kOverwrite);    
   //
   cphys->cd(6);
   PlotPtAccHisto(h2ptaccp);

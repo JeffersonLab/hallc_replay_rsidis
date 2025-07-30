@@ -15,8 +15,8 @@ TH1F paero_good_mult_pos 'SHMS Aero+ Good Multiplicity; Number of PMTs Hit; Tota
 TH1F paero_good_mult_neg 'SHMS Aero- Good Multiplicity; Number of PMTs Hit; Total Number of Good -ADC Hits' P.aero.totNumGoodNegAdcHits 7 0.5 7.5
 # TH1F paero_good_mult 'SHMS Aero Good Multiplicity; Number of PMTs Hit; Total Number of Good ADC Hits' P.aero.totnumGoodAdcHits 14 0.5 14.5
 
-# TH1F paero_tot_npe_pos 'SHMS Aero+ Total NPE; Total Number of Pos Photoelectrons; Number of Entries / 0.5 Photoelectrons' P.aero.posNpeSum 100 0 50 P.aero.posNpeSum>0.0 
-# TH1F paero_tot_npe_neg 'SHMS Aero- Total NPE; Total Number of Neg Photoelectrons; Number of Entries / 0.5 Photoelectrons' P.aero.negNpeSum 100 0 50 P.aero.negNpeSum>0.0 
+TH1F paero_tot_npe_pos 'SHMS Aero+ Total NPE; Total Number of Pos Photoelectrons; Number of Entries / 0.5 Photoelectrons' P.aero.posNpeSum 100 0 50 P.aero.posNpeSum>0.0 
+TH1F paero_tot_npe_neg 'SHMS Aero- Total NPE; Total Number of Neg Photoelectrons; Number of Entries / 0.5 Photoelectrons' P.aero.negNpeSum 100 0 50 P.aero.negNpeSum>0.0 
 # TH1F paero_tot_npe 'SHMS Aero Total NPE; Total NPE; Number of Entries / 0.5 Photoelectrons' P.aero.npeSum 100 0 50 P.aero.npeSum>0.0
 
 TH2F paero_npe_pos 'SHMS Aero+ NPE vs. PMT Number; PMT Number; NPE / 0.5 Photoelectrons' [I+1] P.aero.posNpe 7 0.5 7.5 60 0 30 P.aero.posNpe>0.0 

@@ -32,6 +32,7 @@ TH1F htrig_hT3_good_tdc 'HMS hT3 Good TDC Time (Slot 2, Channel 63); Good Time (
 # TH2F htrig_ch1y_ch1x 'HMS Hodo Trig; 1X Trig (ns); 1Y Trig (ns)' T.coin.h1X_tdcTime T.coin.h1Y_tdcTime 200 100 300 200 100 300 
 
 TH1F htrig_hFADC_TREF_ROC1_good_tdc 'HMS hFADC_TREF_ROC1 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.hFADC_TREF_ROC1_adcPulseTime 800 0 800
+TH1F htrig_hFADC_TREF_ROC1_adcPulseTimeRaw 'HMS hFADC_TREF_ROC1 Raw ADC Pulse Time; ADC Pulse Time (Raw); Counts' T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw 200 0 4000
 
 #----------------------------
 # HMS DC TRIG Reference Time
