@@ -1,5 +1,6 @@
 #! /bin/bash
 
+echo "Hello 1"
 # Which spectrometer are we analyzing.
 spec=${0##*_}
 spec=${spec%%.sh}
@@ -39,13 +40,13 @@ else
 fi
 
 # Which scripts to run.
-script="SCRIPTS/${SPEC}/PRODUCTION/replay_production_${spec}_hElec_pProt.C"
+script="SCRIPTS/${SPEC}/PRODUCTION/replay_helicity_and_scalers.C"
 analysis="get_good_coin_ev.C"
 config="CONFIG/${SPEC}/PRODUCTION/${spec}_production_rsidis.cfg"
 confighms="CONFIG/${SPEC}/PRODUCTION/${spec}_production_rsidis_hms.cfg"
 configshms="CONFIG/${SPEC}/PRODUCTION/${spec}_production_rsidis_shms.cfg"
 #expertConfig="CONFIG/${SPEC}/PRODUCTION/${spec}_production_rsidis.cfg" 
-
+echo "Script: ${script}"
 #Define some useful directories
 rootFileDir="./ROOTfiles"
 goldenDir="../ROOTfiles"
@@ -134,7 +135,7 @@ hydra_configs=(
   echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
 
   sleep 2
-  eval ${runAnalysis}
+#  eval ${runAnalysis}
 
   # Link the ROOT file to latest for online monitoring
   ln -fs ${rootFile} ${latestRootFile}  
@@ -217,8 +218,8 @@ hydra_configs=(
   sleep 2
   [ "$(basename "$PWD")" = "onlineGUI" ] || cd onlineGUI
 
-  eval ${runOnlineGUIhms}
-  eval ${saveOnlineGUIhms}
+#  eval ${runOnlineGUIhms}
+#  eval ${saveOnlineGUIhms}
   mv "${outExpertFilehms}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFilehms}.pdf"
 
   echo "" 
@@ -234,8 +235,8 @@ hydra_configs=(
   echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
 
   sleep 2
-  eval ${runOnlineGUIshms}
-  eval ${saveOnlineGUIshms}
+#  eval ${runOnlineGUIshms}
+#  eval ${saveOnlineGUIshms}
   mv "${outExpertFileshms}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFileshms}.pdf"
 
   echo "" 
@@ -251,8 +252,8 @@ hydra_configs=(
   echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
 
   sleep 2  
-  eval ${runOnlineGUI}
-  eval ${saveExpertOnlineGUI}
+#  eval ${runOnlineGUI}
+#  eval ${saveExpertOnlineGUI}
   mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFile}.pdf"
   cd ..
   ln -fs ${outExpertFilehms}.pdf ${latestMonPdfFilehms}
@@ -305,38 +306,3 @@ python3 plot_effic.py "${reportFile}"
 
 
 ###########################################################
-function yes_or_no() {
-    while true; do
-	read -p "$* [y/n]: " yn
-	case $yn in
-	    [Yy]*) return 0 ;;
-	    [Nn]*)
-		echo "No entered"
-		return 1
-		;;
-	esac
-    done
-}
-# function used to prompt user for questions
-# post pdfs in hclog
-yes_or_no "Upload these plots to logbook HCLOG? " && {
-    read -p "Enter a text body for the log entry (or leave blank): " logCaption
-    echo "$logCaption" >caption.txt
-   if [ "$numEvents" -eq -1 ]; then
-      title="Full replay plots for run ${runNum}"
-    else
-      title="$((numEvents / 1000))k replay plots for run ${runNum}"
-   fi
-   /site/ace/certified/apps/bin/logentry \
-       -cert /home/cdaq/.elogcert \
-       -t "$title" \
-       -e cdaq \
-       -l HCLOG \
-       -a ${latestMonPdfFilehms} \
-       -a ${latestMonPdfFileshms} \
-       -a ${latestMonPdfFile} \
-       -b "caption.txt"
-
-   
-   rm -rf "caption.txt"
-}

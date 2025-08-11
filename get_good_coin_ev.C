@@ -29,7 +29,7 @@
 // --- Basic ---
 // ---
 // 1. list of analysis cuts to apply
-std::string anacuts = "P.hgcer.npeSum>1&&P.aero.npeSum>4&&H.cer.npeSum>2&&H.cal.etottracknorm>0.7&&P.cal.etottracknorm<0.8&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.";
+std::string anacuts = "(P.gtr.p<=2.9||P.hgcer.npeSum>1)&&P.aero.npeSum>2&&H.cer.npeSum>2&&H.cal.etottracknorm>0.7&&P.cal.etottracknorm<0.8&&abs(P.gtr.dp-5.)<15.&&abs(H.gtr.dp)<8.";
 // 2. histo ranges - Convention: {nbin,hmin,hmax}
 std::vector<double> hcoin_range{200,10,90};
 std::vector<double> hQ2_range{200,0.1,10},hx_range{200,0.01,1.2},hW_range{200,0.1,5},hz_range{200,0.01,1.2},hMMpi_range{200,-0.5,8};
@@ -56,11 +56,11 @@ void PlotCutRegion(double xmin, double xmax, EColor fcolor, double alpha);
 void ExtractCoinEvCounts(TH1F *hcoin, std::vector<double> const &cutregion, int verbosity, std::vector<double> &counts);
 double ExtractValueFromReportFile(const std::string& filename, const std::string& key, const char delimiter, int skipCount);
 void PredictNoOfTriggersNeeded(std::string const &inrepfile, std::vector<double> const &counts, double descoinev, int verbosity, std::vector<double> &outputs);
-double CalcNormYield(std::string const &inrepfile, double Nrealcoinev, int verbosity);
+void CalcNormYield(std::string const &inrepfile, double Nrealcoinev, double Nrealcoinev_err, int verbosity, std::vector<double> &NormYield);
 std::vector<std::string> SplitString(char const delim, std::string const myStr);
 TPaveText* CreateSummaryPaveText(int rnum, ULong64_t totevintree, const std::string& anacuts, const std::vector<double>& counts, double normyield, double descoinev, const std::vector<double>& predtrig, TStopwatch* sw);
 TPaveText* CreateSummaryPaveText_new(int rnum, const std::string& anacuts, const std::vector<double>& counts, double normyield, double descoinev, const std::vector<double>& predtrig, TStopwatch* sw);
-void PrintCSVLine(std::ofstream &out, int runnum, double coinall, double randoms, double ransubcoin, double normyield);
+void PrintCSVLine(std::ofstream &out, int runnum, std::vector<double> const counts, std::vector<double> const normyield);
 
 // global variables
 bool is_50k = false;
@@ -171,13 +171,14 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   PredictNoOfTriggersNeeded(inrepfile,counts,descoinev,0,predtrig);
 
   // Calculate charge normalized and efficiency ccorrected yield
-  double normyield = CalcNormYield(inrepfile,counts[2],0);
+  std::vector<double> normyield{0.,0.};
+  CalcNormYield(inrepfile,counts[2],counts[5],1,normyield);
 
   // Write important stuff to a summary canvas
   ccoin->cd(2);
   ULong64_t nEntries = *data_rdf.Count();
   //std::cout << nEntries << "\n";
-  TPaveText* pvtxt = CreateSummaryPaveText(rnum, nEntries, anacuts, counts, normyield, descoinev, predtrig, sw);
+  TPaveText* pvtxt = CreateSummaryPaveText(rnum, nEntries, anacuts, counts, normyield[0], descoinev, predtrig, sw);
   pvtxt->Draw();
   ccoin->Update();
   ccoin->Write("",TObject::kOverwrite);
@@ -238,7 +239,7 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   // Writing out some useful stuff
   std::string outcsv = Form("%s/%s_%d_%d.csv",indirreport.c_str(),outfilebase.c_str(),rnum,nevent);
   std::ofstream outcsv_data(outcsv.c_str());
-  PrintCSVLine(outcsv_data,rnum,counts[0],counts[1],counts[2],normyield);  
+  PrintCSVLine(outcsv_data,rnum,counts,normyield);  
 
   std::cout << "------" << std::endl;
   std::cout << " Output CSV file  : " << outcsv << std::endl;  
@@ -395,20 +396,24 @@ void PlotCutRegion(double xmin, double xmax, EColor fillcolor, double alpha)
 void ExtractCoinEvCounts(TH1F *hcoin, std::vector<double> const &cutregion, int verbosity, std::vector<double> &counts)
 {
   // total events under the main coin peak
-  double totalcoin = hcoin->Integral(hcoin->FindBin(cutregion[0]),hcoin->FindBin(cutregion[1])); 
+  double totalcoin = hcoin->Integral(hcoin->FindBin(cutregion[0]),hcoin->FindBin(cutregion[1]));
+  double totalcoin_err = sqrt(totalcoin);
   // total random coincidence events in the selected region away from the main coin peak
   double rndmcoin = hcoin->Integral(hcoin->FindBin(cutregion[2]),hcoin->FindBin(cutregion[3]));
+  double rndmcoin_err = sqrt(rndmcoin);    
   // + hcoin->Integral(hcoin->FindBin(cutregion[4]),hcoin->FindBin(cutregion[5]));  // (not used)
   // radoms-subtrated good coin events    
   double goodcoin = totalcoin - rndmcoin/rndmscutfactor;
+  double goodcoin_err = sqrt(pow(totalcoin_err,2) + pow(rndmcoin_err/rndmscutfactor,2));  
 
-  counts = {totalcoin,rndmcoin,goodcoin};
+  counts = {totalcoin,rndmcoin,goodcoin,totalcoin_err,rndmcoin_err,goodcoin_err};
+  //counts = {totalcoin,rndmcoin,goodcoin}; //,totalcoin_err,rndmcoin_err,goodcoin_err};  
 
   if (verbosity>0) {
     std::cout << "\n--------\n";
-    std::cout << "Total events under the main coin time peak : " << totalcoin << "\n";
-    std::cout << "Total random coin events selected          : " << rndmcoin << "\n";
-    std::cout << "Randoms subtracted real coin events        : " << (int)goodcoin << "\n";
+    std::cout << "Total events under the main coin time peak : " << (int)totalcoin << " +/- " << (int)totalcoin_err << "\n";
+    std::cout << "Total random coin events selected          : " << (int)rndmcoin << " +/- " << (int)rndmcoin_err << "\n";
+    std::cout << "Randoms subtracted real coin events        : " << (int)goodcoin << " +/- " << (int)goodcoin_err << "\n";
     std::cout << "--------\n";    
   }
 }
@@ -510,9 +515,11 @@ void PredictNoOfTriggersNeeded(std::string const &inrepfile,      // Input repor
   }
 }
 //----------------------------------------------------------
-double CalcNormYield(std::string const &inrepfile, // Input report file name with path
-		     double Nrealcoinev,          // No. of real coin (randoms subtracted) events
-		     int verbosity)
+void CalcNormYield(std::string const &inrepfile, // Input report file name with path
+		   double Nrealcoinev,          // No. of real coin (randoms subtracted) events
+		   double Nrealcoinev_err,       // Statistical error for randoms subtracted coin event
+		   int verbosity,
+		   std::vector<double> &NormYield)
 /* Calculates charge normalized and efficiency corrected yeild from random subtracted coin events */
 {
   //double charge = ExtractValueFromReportFile(inrepfile, "HMS BCM4A Beam Cut Charge", ':'); //mC
@@ -522,7 +529,12 @@ double CalcNormYield(std::string const &inrepfile, // Input report file name wit
   double treffiSHMS = ExtractValueFromReportFile(inrepfile, "HADRON SING FID TRACK EFFIC", ':', 0);
   double trigeffi = 1.0; // assuming 100% efficiency for the moment
 
-  double normyield = Nrealcoinev / (charge * compdeadtime * treffiHMS * treffiSHMS * trigeffi); // 1/mC
+  //double normyield = Nrealcoinev / (charge * compdeadtime * treffiHMS * treffiSHMS * trigeffi);
+  
+  double normfac = 1. / (charge * compdeadtime * treffiHMS * treffiSHMS * trigeffi);
+  
+  double normyield = Nrealcoinev * normfac ; // 1/mC
+  double normyield_err = Nrealcoinev_err * normfac; 
   
   if (verbosity>0) {
     std::cout << "\n--- Normalized Yield ---\n";
@@ -532,11 +544,11 @@ double CalcNormYield(std::string const &inrepfile, // Input report file name wit
     std::cout << "Tracking Effi. HMS      : " << treffiHMS << "\n";
     std::cout << "Tracking Effi. SHMS     : " << treffiSHMS << "\n";        
     std::cout << "Trigger Effi.           : " << trigeffi << "\n";
-    std::cout << "Normalized Yield (1/mC) : " << (int)normyield << "\n";            
+    std::cout << "Normalized Yield (1/mC) : " << normyield << " +/- " << normyield_err << "\n";
     std::cout << "-------\n";
   }
 
-  return normyield;
+  NormYield = {normyield,normyield_err};
 }
 //----------------------------------------------------------
 std::vector<std::string> SplitString(char const delim, std::string const myStr)
@@ -707,42 +719,18 @@ TPaveText* CreateSummaryPaveText(int rnum,
   if (TText* t8 = pvtxt->GetLineWith("Macro")) t8->SetTextColor(kGreen+3);
   return pvtxt;
 }
-// //----------------------------------------------------------
-// void PrintCSVLine(int runnum, double coin, double randoms,
-//                   double ransubcoin, double hmseffi,
-//                   double shmseffi, double charge, double normyield) {
-
-//   double beamcurr = ExtractValueFromReportFile(inrepfile, "SHMS BCM4B Beam Cut Charge", ':', 0); //uA
-//   double charge = ExtractValueFromReportFile(inrepfile, "SHMS BCM4B Beam Cut Charge", ':', 0); //mC
-//   double compdeadtime = ExtractValueFromReportFile(inrepfile, "HMS Computer Dead Time", ':', 0)/100.0;
-//   double treffiHMS = ExtractValueFromReportFile(inrepfile, "E SING FID TRACK EFFIC", ':', 1);  
-//   double treffiSHMS = ExtractValueFromReportFile(inrepfile, "E SING FID TRACK EFFIC", ':', 0);  
-  
-  
-//   std::ostringstream oss;
-//   oss << runnum << ","
-//       << beamcurr << ","
-//       << coin << ","
-//       << randoms << ","
-//       << ransubcoin << ","
-//       << deadtime << ","
-//       << hmseffi << ","
-//       << shmseffi << ","
-//       << charge << ","
-//       << normyield;
-
-//   std::cout << oss.str() << std::endl;
-// }
 //----------------------------------------------------------
-void PrintCSVLine(std::ofstream &out, int runnum, double coinall, double randoms, double ransubcoin, double normyield) {
+void PrintCSVLine(std::ofstream &out, int runnum, std::vector<double> const counts, std::vector<double> const normyield) {
   
   std::ostringstream oss;
-  oss << "runnum,coin,randoms,ransubcoin,normyield\n";
+  oss << "runnum,coin,randoms,ransubcoin,ransubcoin_err,normyield,normyield_err\n";
   oss << runnum << ","
-      << coinall << ","
-      << randoms << ","
-      << ransubcoin << ","    
-      << normyield;
+      << counts[0] << ","
+      << counts[1] << ","
+      << counts[2] << ","
+      << counts[5] << ","        
+      << normyield[0] << ","
+      << normyield[1];
 
   out << oss.str() << std::endl;
 }

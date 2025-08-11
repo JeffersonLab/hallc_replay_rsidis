@@ -1,0 +1,27 @@
+./run_coin_batch.sh 23876
+./run_coin_batch.sh 23878
+./run_coin_batch.sh 23879
+./run_coin_batch.sh 23880
+./run_coin_batch.sh 23881
+./run_coin_batch.sh 23882
+./run_coin_batch.sh 23883
+./run_coin_batch.sh 23884
+./run_coin_batch.sh 23885
+./run_coin_batch.sh 23886
+./run_coin_batch.sh 23887
+./run_coin_batch.sh 23888
+./run_coin_batch.sh 23889
+./run_coin_batch.sh 23890
+./run_coin_batch.sh 23891
+./run_coin_batch.sh 23892
+./run_coin_batch.sh 23893
+./run_coin_batch.sh 23894
+./run_coin_batch.sh 23895
+./run_coin_batch.sh 23896
+./run_coin_batch.sh 23897
+./run_coin_batch.sh 23898
+./run_coin_batch.sh 23899
+./run_coin_batch.sh 23901
+./run_coin_batch.sh 23902
+./run_coin_batch.sh 23903
+

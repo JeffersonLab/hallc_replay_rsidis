@@ -75,4 +75,4 @@ cminch=2.54
 #include "PARAM/SHMS/HODO/phodo_Vpcalib_rsidis.param"
 #include "PARAM/SHMS/HGCER/phgcer_calib_rsidis.param"
 #include "PARAM/SHMS/AERO/paero_calib_rsidis.param"
-#include "PARAM/SHMS/CAL/pcal_calib_rsidis_v8.param"
+#include "PARAM/SHMS/CAL/pcal_calib_4p87gev_7p87deg_rsidis.param"

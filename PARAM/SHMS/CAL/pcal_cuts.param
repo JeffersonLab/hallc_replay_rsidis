@@ -5,6 +5,7 @@
 ;  2 == Use the sample integral - known ped
 ;  3 == Use the sample integral - sample ped
 ; if not set then defaults to use the raw pulse integral
+;pcal_arr_OutputSampWaveform = 1
 pcal_ADCmode = 1
 
 ; FADC pulse time window cuts

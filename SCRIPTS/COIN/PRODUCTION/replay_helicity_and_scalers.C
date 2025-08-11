@@ -48,7 +48,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
 
      // Dec data
-   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
+  //   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
   //=:=:=:=
   // SHMS 
   //=:=:=:=
@@ -103,6 +103,8 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Add event handler for scaler events
   THcScalerEvtHandler* pscaler = new THcScalerEvtHandler("P", "Hall C scaler event type 1");
   pscaler->AddEvtType(1);
+  pscaler->AddEvtType(2);
+  pscaler->AddEvtType(3);  
   pscaler->AddEvtType(4);
   pscaler->AddEvtType(5);
   pscaler->AddEvtType(6);
@@ -166,14 +168,16 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHaPhysics->Add(heff);
 
   // Add event handler for scaler events
-  THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
+  THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");
+  hscaler->AddEvtType(1);  
   hscaler->AddEvtType(2);
   hscaler->AddEvtType(4);
   hscaler->AddEvtType(5);
   hscaler->AddEvtType(6);
   hscaler->AddEvtType(7);
-  hscaler->AddEvtType(129);
-  hscaler->SetDelayedType(129);
+  hscaler->AddEvtType(129);  
+  hscaler->AddEvtType(131);
+  hscaler->SetDelayedType(131);
   hscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(hscaler);
 
@@ -209,6 +213,10 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   coin->AddEvtType(2);
   TRG->AddDetector(coin); 
 
+
+  THcHelicity* helicity = new THcHelicity("helicity", "Helicity Detector");
+  TRG->AddDetector(helicity); // check later
+
   
   //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName, 
   // const char* elecArmName, const char* coinname) :
@@ -228,8 +236,8 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // tests/cuts, loops over Acpparatus's and PhysicsModules,
   // and executes the output routines.
   THcAnalyzer* analyzer = new THcAnalyzer;
-  analyzer->EnablePhysicsEvents(false);
-  std::cout << "The Physics Events are not replayed.\n";
+  //  analyzer->EnablePhysicsEvents(false);
+  //  std::cout << "The Physics Events are not replayed.\n";
     
 
   // A simple event class to be output to the resulting tree.
@@ -258,7 +266,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   analyzer->SetEvent(event);
   // Set EPICS event type
-  analyzer->SetEpicsEvtType(180);
+  analyzer->SetEpicsEvtType(182);
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
   // Define output ROOT file

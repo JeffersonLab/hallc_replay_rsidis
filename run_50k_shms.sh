@@ -43,7 +43,7 @@ fi
 # Which scripts to run.
 script="SCRIPTS/${SPEC}/PRODUCTION/replay_production_${spec}_coin.C"
 analysis="get_good_dis_ev.C"
-config="CONFIG/${SPEC}/PRODUCTION/${spec}_coin_production.cfg"
+config="CONFIG/COIN/PRODUCTION/coin_production_rsidis_${spec}.cfg"
 configcnt="CONFIG/${SPEC}/PRODUCTION/${spec}_coin_production_rsidis.cfg"
 expertConfig="CONFIG/${SPEC}/PRODUCTION/${spec}_coin_production_expert.cfg"
 
@@ -96,6 +96,11 @@ outFileMonitor="output.txt"
 # Replay out files
 replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEvents}.txt"
 
+hydra_configs=(
+    ${config}
+    ${configcnt}
+)
+
 # Start analysis and monitoring plots.
 {
   echo ""
@@ -129,6 +134,69 @@ replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEv
   # Link the ROOT file to latest for online monitoring
   ln -fs ${rootFile} ${latestRootFile}
   
+  echo ""
+  echo ""
+  echo ""
+  echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
+  echo ""
+  echo "Adding RSIDIS panguin plots to Hydra for run ${runNum}"
+  echo ""
+  echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
+
+  log_dir="/home/cdaq/rsidis-2025/logs/${runNum}"
+  mkdir -p "$log_dir" || { echo "[FATAL] Could not create log directory: $log_dir"; exit 1; }
+  
+  pids=()
+  logs=()
+  statuses=()
+
+  echo "[INFO] Starting parallel panguin jobs for run ${runNum}..."
+  cd onlineGUI || { echo "[FATAL] Failed to cd into onlineGUI"; exit 1; }
+  for config in "${hydra_configs[@]}"; do
+      cfg_name=$(basename "$config" .cfg)
+      log_file="${log_dir}/panguin_${cfg_name}_${runNum}.log"
+      logs+=("$log_file")
+      
+      (
+	  echo "[INFO] Running: panguin -f ${config} -r ${runNum} -b -E png"
+	  panguin -f "${config}" -r "${runNum}" -b -E png &> "$log_file"
+      ) &
+      pids+=($!)
+  done
+  
+  # Wait and check exit codes
+  for i in "${!pids[@]}"; do
+      pid=${pids[$i]}
+      wait "$pid"
+      status=$?
+      statuses+=($status)
+      
+      if [ $status -ne 0 ]; then
+	  echo "[ERROR] Job for ${hydra_configs[$i]} failed. See ${logs[$i]}"
+      else
+	  echo "[SUCCESS] Job for ${hydra_configs[$i]} completed."
+      fi
+  done
+  
+  # If all succeeded, run change script
+  if [[ ! " ${statuses[@]} " =~ [^0[:space:]] ]]; then
+    echo "[INFO] All panguin jobs succeeded. Running copy_rsidis_images.sh ${runNum}"
+    copy_log="${log_dir}/copy_rsidis_shms_images_${runNum}.log"
+    ./copy_rsidis_images.sh "${runNum}" &> "$copy_log"
+    copy_status=$?
+
+    if [ $copy_status -eq 0 ]; then
+        echo "[SUCCESS] copy_rsidis_images.sh completed successfully."
+    else
+        echo "[ERROR] copy_rsidis_images.sh failed with status $copy_status. See log: $copy_log"
+    fi
+  else
+      echo "[ERROR] One or more panguin jobs failed. Skipping changePanguinNames script."
+  fi
+  echo "[INFO] Detailed Logs for hydra setup available in: $log_dir"
+
+  sleep 2
+
   echo "" 
   echo ""
   echo ""
@@ -142,7 +210,7 @@ replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEv
   echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="
 
   sleep 2
-  cd onlineGUI
+  [ "$(basename "$PWD")" = "onlineGUI" ] || cd onlineGUI
   eval ${runOnlineGUI}
   eval ${saveExpertOnlineGUI}
   mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFile}.pdf"
