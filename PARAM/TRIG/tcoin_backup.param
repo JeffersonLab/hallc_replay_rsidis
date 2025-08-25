@@ -10,9 +10,9 @@ eHadCoinTime_Offset = 0.
 t_coin_trigNames="pTRIG1_ROC1 pTRIG3_ROC1 pTRIG1_ROC2 pTRIG3_ROC2"
 
 ; tdc cut is on pTRef2
-t_coin_trig_tdcrefcut = -7850.
 ; adc cut on pFADC_ROC2
-t_coin_trig_adcrefcut = -4500.     
+t_coin_trig_tdcrefcut = -7500.  
+t_coin_trig_adcrefcut = -4300.     
 
 ;NOTE: pTRIG1_ROC1, pTRIG4_ROC1, pTRIG1_ROC2, pTRIG4_ROC2 (tdcTimeRaw),  are hard-coded in THcTrigDet.cxx class
 ;      These varibles and their indices are used for the coincidence time calculation, and should NOT change here.
