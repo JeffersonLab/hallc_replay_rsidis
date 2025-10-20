@@ -13032,15 +13032,15 @@ ppcentral = 3.632
 hpartmass = 0.000511
 ppartmass = 0.139570
 
-## MARKED JUNK ## Run 24620
-# gpbeam = 8.565
-# gtargmass_amu = 2.014101778
-# htheta_lab = -29.060000000000002
-# hpcentral = 1.531
-# ptheta_lab = 11.065
-# ppcentral = 3.632
-# hpartmass = 0.000511
-# ppartmass = 0.13957
+24620 - 24620
+gpbeam = 8.5831
+gtargmass_amu = 2.014101778
+htheta_lab = -29.045
+hpcentral = 1.531
+ptheta_lab = 11.075
+ppcentral = 3.632
+hpartmass = 0.000511
+ppartmass = 0.13957
 
 24621 - 24621
 gpbeam = 8.5831
