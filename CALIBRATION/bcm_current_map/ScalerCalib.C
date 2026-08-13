@@ -41,16 +41,25 @@ int ScalerCalib::Run()
     }
 
   int pos;
-  pos = filename.find("scalers_");
+  pos = filename.find("scaler_helicity_replay_");
 
   if(pos == -1)
     {
-      pos = filename.find("production_");
-      runstr = (filename.substr(pos+11)).substr(0,5);
+      pos = filename.find("scalers_");
+
+      if(pos == -1)
+        {
+          pos = filename.find("production_");
+          runstr = (filename.substr(pos+11)).substr(0,5);
+        }
+      else
+        {
+          runstr = (filename.substr(pos+8)).substr(0,5);
+        }
     }
   else
     {
-      runstr = (filename.substr(pos+8)).substr(0,5);
+      runstr = (filename.substr(pos+23)).substr(0,5);
     }
 
   ofilename = "bcmcurrent_" + runstr + ".param";
