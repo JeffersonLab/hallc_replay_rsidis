@@ -18,7 +18,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Create file name patterns.
   //  const char* RunFileNamePattern = "coin_all_%05d.dat";
   //  const char* RunFileNamePattern = "lad_Production_%05d.dat.0";
-  const char* RunFileNamePattern = "rsidis_production_%05d.dat.0";  
+  const char* RunFileNamePattern = "rsidis_production_%05d.dat.0";
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
@@ -27,7 +27,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "ROOTfiles/scaler_helicity_replay_%d_%d.root";
-  
+
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
   gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
@@ -42,6 +42,9 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
 
+  const char* CurrentFileNamePattern = "PARAM/SHMS/BCM/CALIB/bcmcurrent_%d.param";
+  gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
+
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   gHcDetectorMap->Load(gHcParms->GetString("g_ctp_map_filename"));
@@ -49,7 +52,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
      // Dec data
   //   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
   //=:=:=:=
-  // SHMS 
+  // SHMS
   //=:=:=:=
 
   // Set up the equipment to be analyzed.
@@ -79,6 +82,9 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   THcShower* pcal = new THcShower("cal", "Calorimeter");
   SHMS->AddDetector(pcal);
 
+  THcBCMCurrent* pbc = new THcBCMCurrent("P.bcm", "BCM current check");
+  gHaPhysics->Add(pbc);
+
   // Add rastered beam apparatus
   THaApparatus* pbeam = new THcRasteredBeam("P.rb", "Rastered Beamline");
   gHaApps->Add(pbeam);
@@ -94,13 +100,13 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHaPhysics->Add(pgtr);
   // Calculate the hodoscope efficiencies
   THcHodoEff* peff = new THcHodoEff("phodeff", "SHMS hodo efficiency", "P.hod");
-  gHaPhysics->Add(peff);   
+  gHaPhysics->Add(peff);
 
   // Add event handler for scaler events
   THcScalerEvtHandler* pscaler = new THcScalerEvtHandler("P", "Hall C scaler event type 1");
   pscaler->AddEvtType(1);
   pscaler->AddEvtType(2);
-  pscaler->AddEvtType(3);  
+  pscaler->AddEvtType(3);
   pscaler->AddEvtType(4);
   pscaler->AddEvtType(5);
   pscaler->AddEvtType(6);
@@ -117,9 +123,9 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   phelscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(phelscaler);
 
-  
+
   //=:=:=
-  // HMS 
+  // HMS
   //=:=:=
 
   // Set up the equipment to be analyzed.
@@ -148,7 +154,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Add rastered beam apparatus
   THaApparatus* hbeam = new THcRasteredBeam("H.rb", "Rastered Beamline");
-  gHaApps->Add(hbeam);  
+  gHaApps->Add(hbeam);
   // Add physics modules
   // Calculate reaction point
   THcReactionPoint* hrp = new THcReactionPoint("H.react", "HMS reaction point", "H", "H.rb");
@@ -165,13 +171,13 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");
-  hscaler->AddEvtType(1);  
+  hscaler->AddEvtType(1);
   hscaler->AddEvtType(2);
   hscaler->AddEvtType(4);
   hscaler->AddEvtType(5);
   hscaler->AddEvtType(6);
   hscaler->AddEvtType(7);
-  hscaler->AddEvtType(129);  
+  hscaler->AddEvtType(129);
   hscaler->AddEvtType(131);
   hscaler->SetDelayedType(131);
   hscaler->SetUseFirstEvent(kTRUE);
@@ -183,7 +189,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   hhelscaler->SetROC(5);
   hhelscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(hhelscaler);
-  
+
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Kinematics Modules
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
@@ -194,7 +200,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Add Physics Module to calculate secondary (scattered hadrons) beam kinematics
   THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
   gHaPhysics->Add(pkin_secondary);
-  
+
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Global Objects & Event Handlers
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
@@ -207,14 +213,14 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Suppress missing reference time warnings for these event types
   coin->SetEvtType(1);
   coin->AddEvtType(2);
-  TRG->AddDetector(coin); 
+  TRG->AddDetector(coin);
 
 
   THcHelicity* helicity = new THcHelicity("helicity", "Helicity Detector");
   TRG->AddDetector(helicity); // check later
 
-  
-  //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName, 
+
+  //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName,
   // const char* elecArmName, const char* coinname) :
   THcCoinTime* coinTime = new THcCoinTime("CTime", "Coincidende Time Determination", "P", "H", "T.coin");
   gHaPhysics->Add(coinTime);
@@ -225,7 +231,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Add event handler for EPICS events
   THaEpicsEvtHandler* hcepics = new THaEpicsEvtHandler("epics", "HC EPICS event type 180");
   gHaEvtHandlers->Add(hcepics);
- 
+
   // Set up the analyzer - we use the standard one,
   // but this could be an experiment-specific one as well.
   // The Analyzer controls the reading of the data, executes
@@ -234,7 +240,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   THcAnalyzer* analyzer = new THcAnalyzer;
   //  analyzer->EnablePhysicsEvents(false);
   //  std::cout << "The Physics Events are not replayed.\n";
-    
+
 
   // A simple event class to be output to the resulting tree.
   // Creating your own descendant of THaEvent is one way of
@@ -247,7 +253,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Set to read in Hall C run database parameters
   run->SetRunParamClass("THcRunParameters");
-  
+
   // Eventually need to learn to skip over, or properly analyze the pedestal events
   run->SetEventRange(1, MaxEvent); // Physics Event number, does not include scaler or control events.
   run->SetNscan(1);

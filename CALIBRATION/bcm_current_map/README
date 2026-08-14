@@ -1,19 +1,85 @@
-This script runs over a scaler tree (TSH) and save bcm current values
-for BCM1, BCM2, (BCM4a, BCM4b, BCM17) as well as the event number 
-for each scaler event.
+This script runs over an HMS scaler tree (TSH) or SHMS scaler tree (TSP) and
+saves BCM current values for BCM1, BCM2, BCM4A, BCM4B, and BCM4C, as well as
+the event number for each scaler event.
 
 How to make a parameter file for the average BCM current information
 
-- Use ROOT version 6.08 to use R__LOAD_LIBRARY
-- Do this once to make shared libraries (or after modifying the marco)
+- Do this once to make shared libraries (or after modifying the macro)
 > root -b
 root [0] .L ScalerCalib.C+
 
 To run a script:
-> roob -b
-root [0] .x run.C("/path/Scaler root output file");
+> root -b
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("/path/to/scaler/root/file", "H_or_P");
 
 It prints out 
       # of scaler read, 
       average bcm current values for each bcm
       corresponding event number for each scaler event
+
+
+******************** Comments by rparvez ********************
+Date: Aug 13, 2026
+
+1. With cdaq ROOT 6.36.04, ACLiC places the library under .root_build_dir.
+The bare library name in R__LOAD_LIBRARY is then not found through ROOT's
+library search path. However, doing:
+> root -b
+root [0] .L ScalerCalib.C+
+loads the library in current scope. So, I decided to comment R__LOAD_LIBRARY
+line and adopt following for running the program:
+
+> root -b
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("/path/to/scaler/root/file", "H_or_P");
+
+2. Current workflow is like this:
+a. have scaler .root files ready
+b. run ScalerCalib on scaler .root files to generate bcmcurrent_<run>.param files
+in the current working directory (CALIBRATION/bcm_current_map/)
+c. Edit the scaler replay scripts to load these new .param files
+d. replay again with this edited scaler script to create .root files with average
+bcm current branches in tree "T".
+
+This workflow requires us to change a replay script which is already running and
+heavily-used by other users. So, I adopted following workflow:
+
+a. have scaler replay scripts ready. They are:
+SCRIPTS/<COIN, HMS, SHMS>/PRODUCTION/replay_helicity_and_scalers<.C, _hms.C, _shms.C>
+
+b. have scaler .root files ready. Filename pattern:
+COIN: scaler_helicity_replay_<run>_<events>.root
+HMSDIS: scaler_helicity_replay_hms_<run>_<events>.root
+SHMSDIS: scaler_helicity_replay_shms_<run>_<events>.root
+
+c. run ScalerCalib on .root files to generate bcmcurrent_<run>.param at:
+PARAM/<HMS, SHMS>/BCM/CALIB/bcmcurrent_<run>.param
+note:
+1. I edited ScalerCalib to check and create these subdirectories BCM/, CALIB/.
+2. I decided to use spec_name = "P" for COIN cases, so .param for COIN will go
+to PARAM/SHMS/BCM/CALIB/.
+
+d. In order to avoid editing already-running and heavily-used versions of replay
+scripts, I kept edited versions of scaler replay scripts at:
+SCRIPTS/<COIN, HMS, SHMS>/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers<.C, _hms.C, _shms.C>
+replaying with these scripts will add average BCM current branches to "T" and
+overwrite the existing scaler .root file.
+
+Run ScalerCalib from CALIBRATION/bcm_current_map using:
+
+COIN (reads TSP and writes under PARAM/SHMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_<run>_<events>.root", "P");
+
+HMSDIS (reads TSH and writes under PARAM/HMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_hms_<run>_<events>.root", "H");
+
+SHMSDIS (reads TSP and writes under PARAM/SHMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_shms_<run>_<events>.root", "P");
+
+SetPrintFlag(1) in run.C writes all five BCM current arrays required by
+THcBCMCurrent. The AddAvgBcm replay maps each scaler interval onto physics
+events and writes H.bcm.* or P.bcm.* branches in tree T.
