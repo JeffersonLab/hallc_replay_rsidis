@@ -1,4 +1,4 @@
-void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_helicity_and_scalers_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -26,7 +26,7 @@ void replay_helicity_and_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./cache");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "ROOTfiles/scaler_helicity_replay_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/scaler_helicity_replay_coin_%d_%d.root";
 
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
