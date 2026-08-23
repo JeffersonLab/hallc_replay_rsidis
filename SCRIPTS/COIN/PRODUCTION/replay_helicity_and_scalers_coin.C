@@ -1,6 +1,6 @@
 #include "MultiFileRun.h"
 
-void replay_helicity_and_scalers_shms(Int_t RunNumber=0, Int_t MaxEvent=0,
+void replay_helicity_and_scalers_coin(Int_t RunNumber=0, Int_t MaxEvent=0,
                                       Int_t FirstEvent=1, Int_t MaxSegment=-1) {
 
   if(RunNumber == 0) {
@@ -25,7 +25,7 @@ void replay_helicity_and_scalers_shms(Int_t RunNumber=0, Int_t MaxEvent=0,
   pathList.push_back("./cache");
 
   const char* ROOTFileNamePattern =
-    "ROOTfiles/scaler_helicity_replay_shms_%d_%d.root";
+    "ROOTfiles/scaler_helicity_replay_coin_%d_%d.root";
 
   // Load only the global parameters needed by the scaler handlers.
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -62,6 +62,29 @@ void replay_helicity_and_scalers_shms(Int_t RunNumber=0, Int_t MaxEvent=0,
   phelscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(phelscaler);
 
+  THcScalerEvtHandler* hscaler =
+    new THcScalerEvtHandler("H", "Hall C scaler event type 2");
+  hscaler->AddEvtType(1);
+  hscaler->AddEvtType(2);
+  hscaler->AddEvtType(3);
+  hscaler->AddEvtType(4);
+  hscaler->AddEvtType(5);
+  hscaler->AddEvtType(6);
+  hscaler->AddEvtType(7);
+  hscaler->AddEvtType(131);
+  hscaler->SetDelayedType(131);
+  hscaler->SetUseFirstEvent(kTRUE);
+  gHaEvtHandlers->Add(hscaler);
+
+  THcHelicityScaler* hhelscaler =
+    new THcHelicityScaler("H", "Hall C helicity scaler");
+  hhelscaler->SetROC(5);
+  hhelscaler->SetUseFirstEvent(kTRUE);
+  gHaEvtHandlers->Add(hhelscaler);
+
+  THcConfigEvtHandler* hconfig =
+    new THcConfigEvtHandler("hconfig", "Hall C configuration event handler");
+  gHaEvtHandlers->Add(hconfig);
   THcConfigEvtHandler* pconfig =
     new THcConfigEvtHandler("pconfig", "Hall C configuration event handler");
   gHaEvtHandlers->Add(pconfig);
@@ -117,7 +140,7 @@ void replay_helicity_and_scalers_shms(Int_t RunNumber=0, Int_t MaxEvent=0,
   analyzer->SetEpicsEvtType(182);
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
   analyzer->SetOutFile(ROOTFileName.Data());
-  analyzer->SetOdefFile("DEF-files/SHMS/EPICS/epics_short.def");
+  analyzer->SetOdefFile("DEF-files/COIN/EPICS/epics_short.def");
   analyzer->EnablePhysicsEvents(false);
   analyzer->Process(run);
 }

@@ -47,6 +47,8 @@ int ScalerCalib::Run()
     run_token = "scaler_helicity_replay_hms_";
   else if((pos = filename.find("scaler_helicity_replay_shms_")) != -1)
     run_token = "scaler_helicity_replay_shms_";
+  else if((pos = filename.find("scaler_helicity_replay_coin_")) != -1)
+    run_token = "scaler_helicity_replay_coin_";
   else if((pos = filename.find("scaler_helicity_replay_")) != -1)
     run_token = "scaler_helicity_replay_";
   else if((pos = filename.find("scalers_")) != -1)
