@@ -22,10 +22,10 @@
 !23836    07/16      0            0     	0      0    	0    	0    	0    	0       0       		JUNK		Junk; EDTM was on at 20Hz
 23837     07/16      00:43        8.5831	5      HOLE	+2.28	42.000	-7.07	12.465	0,-1,0,-1,-1,-1		HOLE		EDTM is off; 3x3 raster look good
 23838     07/16      00:51        8.5831	5      HOLE	+2.28	42.000	-7.07	12.465	0,-1,0,-1,-1,-1		HOLE		2X2 raster look good
-23839     07/16      05:51        8.5831	5      LH2	+2.28	42.00	-7.07	12.465	-1,-1,-1,-1,0,-1	HEEP		Changed to LH2 target;Beam trips above 5uA, so kept running at 5uA
-23840     07/16      06:46        8.5831	5      LH2	+2.28	42.00	-7.07	12.465	-1,-1,-1,-1,0,-1	HEEP        	0      
-23841     07/16      07:22        8.5831	25     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1	HEEP		Current changed from 5uA to 25uA  in the middle of the run
-23842     07/16      08:37        8.5831	35     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1	HEEP		pushed to max current, current was up to 40uA
+23839     07/16      05:51        8.5831	5      LH2	+2.28	42.00	-7.07	12.465	-1,-1,-1,-1,0,-1	SHMSHEEP	Changed to LH2 target;Beam trips above 5uA, so kept running at 5uA
+23840     07/16      06:46        8.5831	5      LH2	+2.28	42.00	-7.07	12.465	-1,-1,-1,-1,0,-1	SHMSHEEP        0      
+23841     07/16      07:22        8.5831	25     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1	SHMSHEEP	Current changed from 5uA to 25uA  in the middle of the run
+23842     07/16      08:37        8.5831	35     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1	SHMSHEEP	pushed to max current, current was up to 40uA
 !23843    07/16      0            0		0      0	0	0	0	0	0			JUNK   		Junk
 23844     07/16      09:46        8.5831	30     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1        SHMSHEEP       	0
 23845     07/16      10:18        8.5831	30     LH2	+2.28	42.000	-7.07	12.465	-1,-1,-1,-1,0,-1	SHMSHEEP	current 30-50uA
