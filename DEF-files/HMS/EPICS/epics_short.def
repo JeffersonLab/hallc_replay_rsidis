@@ -1,4 +1,4 @@
-block T.hms.*
+#block T.hms.*
 
 begin epics
 IBC3H00CRCUR4

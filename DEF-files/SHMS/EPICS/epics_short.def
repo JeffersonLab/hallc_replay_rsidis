@@ -1,4 +1,4 @@
-block T.shms.*
+#block T.shms.*
 
 begin epics
 IBC3H00CRCUR4
