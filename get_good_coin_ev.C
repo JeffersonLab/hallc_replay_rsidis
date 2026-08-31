@@ -56,6 +56,7 @@ double fixedcmean = 51.3; //ns
 TF1* FitCoinPeak(TH1F *h);
 void CustomizeHist(TH1F *h);
 void PlotPtAccHisto(TH2* h2);
+void define_rsidis_specific_stuff(int run);
 void DetermineCoinCutRegion(TH1F* hcoin, double ctmean, int verbosity, std::vector<double> &cutregion);
 void PlotCutRegion(double xmin, double xmax, EColor fcolor, double alpha);
 void ExtractCoinEvCounts(TH1F *hcoin, std::vector<double> const &cutregion, int verbosity, std::vector<double> &counts);
@@ -76,10 +77,14 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
 		     double descoinev=100000., // desired number of real coin events
 		     std::string indirroot="ROOTfiles", // Path to directory containing input ROOT file
 		     std::string indirreport="REPORT_OUTPUT/COIN/PRODUCTION", // Path to directory containing input report file
-		     std::string outdirplot="HISTOGRAMS/COIN/PDF", // Path to directory to save output plots
+		     std::string outdirplot="HISTOGRAMS/COIN", // Path to directory to save output plots
 		     std::string outfilebase="output_get_good_coin_ev") // output filename prefix
 {
   gErrorIgnoreLevel = kError; // Ignores all ROOT warnings
+
+  // lets redefine a few user configurable variables based on run number for RSIDIS
+  // comment this out to adapt for a different exp. 
+  define_rsidis_specific_stuff(rnum);
 
   if (nevent==50000) is_50k = true;
   
@@ -252,12 +257,17 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   cbeta->Write("",TObject::kOverwrite);
   
   // Writing out the canvas
-  TString outplot = Form("%s/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  TString outplot = Form("%s/PDF/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
   ccoin->SaveAs(Form("%s[",outplot.Data()));
   ccoin->SaveAs(Form("%s",outplot.Data())); 
   cphys->SaveAs(Form("%s",outplot.Data()));
   cbeta->SaveAs(Form("%s",outplot.Data()));  
   cbeta->SaveAs(Form("%s]",outplot.Data()));
+
+  TString outpng = Form("%s/PNG/%s_%d_%d",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  ccoin->SaveAs(Form("%s_coin.png",outpng.Data()));
+  cphys->SaveAs(Form("%s_phys.png",outpng.Data()));
+  cbeta->SaveAs(Form("%s_beta.png",outpng.Data()));
 
   // Writing out some useful stuff
   std::string outcsv = Form("%s/%s_%d_%d.csv",indirreport.c_str(),outfilebase.c_str(),rnum,nevent);
@@ -267,6 +277,7 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
   std::cout << "------" << std::endl;
   std::cout << " Output CSV file  : " << outcsv << std::endl;  
   std::cout << " Output PDF file  : " << outplot << std::endl;
+  std::cout << " Output PNG file  : " << outpng << std::endl;  
   std::cout << " Output ROOT file  : " << outfile << std::endl;  
   std::cout << "------" << std::endl << std::endl;
   
@@ -275,7 +286,59 @@ int get_good_coin_ev(int rnum,                 // Run number to analyze
 
   return 0;
 }
+//----------------------------------------------------------
+int get_beam_bunch_stuct_info(int run) {
+  // this function is only relevant for RSIDIS exp.
+  if ((run >= 27101) && (run <= 28106))
+    return 2;
+  else
+    return 4;			
+}
+//----------------------------------------------------------
+bool is_pos_SIDIS(const std::string& eplus_runlist, int run) {
+    std::ifstream file(eplus_runlist);
+    if (!file.is_open()) {
+        std::cerr << "Error opening e+ runlist\n";
+        exit(0);
+    }
 
+    std::string line;
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            if (std::stoi(line) == run) {
+                return true;
+            }
+        }
+    }
+    return false; // not a SIDIS e+ run 
+}
+//----------------------------------------------------------
+void define_rsidis_specific_stuff(int run)
+{
+  std::cout << "\n---\nATTENTION: A few user variables are redefined\n";
+  std::cout << "The values are specific for RSIDIS\n";
+  
+  int bunchstr = get_beam_bunch_stuct_info(run);
+  std::cout << Form("Beam bunch structure: %d ns\n", bunchstr);
+  if (bunchstr==2) {
+    rndmscutdist = 16.;                  
+    rndmscutfactor = 13.;
+    beambunchstruct = 2.;
+  }
+  else { // for 4ns bunch structure
+    rndmscutdist = 18.;                  
+    rndmscutfactor = 6.;
+    beambunchstruct = 4.;
+  }
+
+  bool is_pos = is_pos_SIDIS("AUX_FILES/all_eplus_runlist.csv", run);
+  if (is_pos) {
+    std::cout << Form("It is a SIDIS e+ run!\n");    
+    isfixedmean = true;
+    fixedcmean = 51.25; //ns
+  }
+  else isfixedmean = false;
+}
 //----------------------------------------------------------
 void CustomizeHist(TH1F *h) {
   // Customizes coin histo

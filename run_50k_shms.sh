@@ -52,7 +52,7 @@ goldenDir="../ROOTfiles"
 goldenFile="${goldenDir}/${spec}_coin_replay_production_golden.root"
 rootFileDir="./ROOTfiles"
 monRootDir="./HISTOGRAMS/${SPEC}/ROOT"
-monPdfDir="./HISTOGRAMS/${SPEC}/PDF"
+monPdfDir="./HISTOGRAMS/${SPEC}"
 reportFileDir="./REPORT_OUTPUT/${SPEC}/PRODUCTION"
 reportMonDir="./UTIL_OL/REP_MON" 
 reportMonOutDir="./MON_OUTPUT/REPORT" 
@@ -213,7 +213,7 @@ hydra_configs=(
   [ "$(basename "$PWD")" = "onlineGUI" ] || cd onlineGUI
   eval ${runOnlineGUI}
   eval ${saveExpertOnlineGUI}
-  mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFile}.pdf"
+  mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/${outExpertFile}.pdf"
 
   echo "" 
   echo ""
@@ -230,7 +230,7 @@ hydra_configs=(
   sleep 2  
   eval ${runOnlineGUIcnt}
   # eval ${saveOnlineGUIcnt}
-  # mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFile}.pdf"
+  # mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/${outExpertFile}.pdf"
   
   cd ..
   ln -fs ${outExpertFile}.pdf ${latestMonPdfFile}

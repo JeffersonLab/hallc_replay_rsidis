@@ -51,7 +51,7 @@ rootFileDir="./ROOTfiles"
 goldenDir="../ROOTfiles"
 goldenFile="${goldenDir}/${spec}_replay_production_golden.root"
 monRootDir="./HISTOGRAMS/${SPEC}/ROOT"
-monPdfDir="./HISTOGRAMS/${SPEC}/PDF"
+monPdfDir="./HISTOGRAMS/${SPEC}"
 reportFileDir="./REPORT_OUTPUT/${SPEC}/PRODUCTION"
 reportMonDir="./UTIL_OL/REP_MON" 
 reportMonOutDir="./MON_OUTPUT/REPORT" 
@@ -150,7 +150,7 @@ replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEv
 
   eval ${runOnlineGUIhms}
   eval ${saveOnlineGUIhms}
-  mv "${outExpertFilehms}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFilehms}.pdf"
+  mv "${outExpertFilehms}.pdf" "../HISTOGRAMS/${SPEC}/${outExpertFilehms}.pdf"
 
   echo "" 
   echo ""
@@ -166,7 +166,7 @@ replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEv
   
   eval ${runOnlineGUIshms}
   eval ${saveOnlineGUIshms}
-  mv "${outExpertFileshms}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFileshms}.pdf"
+  mv "${outExpertFileshms}.pdf" "../HISTOGRAMS/${SPEC}/${outExpertFileshms}.pdf"
 
   echo "" 
   echo ""
@@ -181,7 +181,7 @@ replayReport="${reportFileDir}/replayReport_${spec}_production_${runNum}_${numEv
   echo ":=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:="  
   eval ${runOnlineGUI}
   eval ${saveExpertOnlineGUI}
-  mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/PDF/${outExpertFile}.pdf"
+  mv "${outExpertFile}.pdf" "../HISTOGRAMS/${SPEC}/${outExpertFile}.pdf"
   cd ..
   ln -fs ${outExpertFilehms}.pdf ${latestMonPdfFilehms}
   ln -fs ${outExpertFileshms}.pdf ${latestMonPdfFileshms}  

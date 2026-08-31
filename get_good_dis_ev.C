@@ -26,7 +26,7 @@
 // 1. list of analysis cuts for HMS DIS
 std::string anacutsHMS = "abs(H.gtr.dp)<8&&H.cer.npeSum>2";
 // 2. list of analysis cuts for SHMS DIS
-std::string anacutsSHMS = "abs(P.gtr.dp-5.)<15.&&P.aero.npeSum>4";
+std::string anacutsSHMS = "abs(P.gtr.dp-5.)<15.&&P.aero.npeSum>2";
 // 3. histo ranges - Convention: {nbin,hmin,hmax}
 std::vector<double> heOVp_range{200,0.3,2.0};
 std::vector<double> hQ2_range{200,0.1,10},hx_range{200,0.01,1.2},hW_range{200,0.1,5};
@@ -69,12 +69,12 @@ int get_good_dis_ev(int rnum,                  // Run number to analyze
   
   // Reading input ROOT files
   std::string inrfile = Form("%s/%s_coin_replay_production_%d_%d.root",indirroot.c_str(),speclower.c_str(),rnum,nevent); // input ROOT file name with directory path
-  ROOT::EnableImplicitMT();
+  ROOT::EnableImplicitMT(1);
   ROOT::RDataFrame data_rdf_raw("T",inrfile.c_str());
 
   // defining output directories and ROOT file 
   std::string indirreport=Form("REPORT_OUTPUT/%s/PRODUCTION",spec.c_str()); // Path to directory containing input report file
-  std::string outdirplot=Form("HISTOGRAMS/%s/PDF",spec.c_str());            // Path to directory to save output plots
+  std::string outdirplot=Form("HISTOGRAMS/%s",spec.c_str());            // Path to directory to save output plots
   //
   TString outfile = inrfile; // Let's save the output files in the input root file
   TFile *fout = new TFile(outfile.Data(),"UPDATE");
@@ -139,11 +139,15 @@ int get_good_dis_ev(int rnum,                  // Run number to analyze
   hW->Write("",TObject::kOverwrite);
   
   // Writing out the canvas
-  TString outplot = Form("%s/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  TString outplot = Form("%s/PDF/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
   ceOVp->SaveAs(Form("%s[",outplot.Data()));
   ceOVp->SaveAs(Form("%s",outplot.Data())); 
   cphys->SaveAs(Form("%s",outplot.Data()));
   cphys->SaveAs(Form("%s]",outplot.Data()));
+
+  TString outpng = Form("%s/PNG/%s_%d_%d",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  ceOVp->SaveAs(Form("%s_eovp.png",outpng.Data()));
+  cphys->SaveAs(Form("%s_phys.png",outpng.Data()));
 
   // Writing out some useful stuff
   std::string outcsv = Form("%s/%s_%d_%d.csv",indirreport.c_str(),outfilebase.c_str(),rnum,nevent);
@@ -153,6 +157,7 @@ int get_good_dis_ev(int rnum,                  // Run number to analyze
   std::cout << "------" << std::endl;
   std::cout << " Output CSV file  : " << outcsv << std::endl;
   std::cout << " Output PDF file  : " << outplot << std::endl;
+  std::cout << " Output PNG file  : " << outpng << std::endl;  
   std::cout << " Output ROOT file  : " << outfile << std::endl;  
   std::cout << "------" << std::endl << std::endl;
   
