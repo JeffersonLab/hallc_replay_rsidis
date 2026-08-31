@@ -50,6 +50,16 @@ SCRIPTS/COIN/PRODUCTION/replay_helicity_and_scalers_coin.C
 SCRIPTS/HMS/PRODUCTION/replay_helicity_and_scalers_hms.C
 SCRIPTS/SHMS/PRODUCTION/replay_helicity_and_scalers_shms.C
 
+HEEP and HEE runs use these same spectrometer-based scaler replays:
+- HEEP hElec_pProt and pElec_hProt use the COIN replay because both
+  spectrometer arms are read out.
+- HEE hElec uses the HMS replay.
+- HEE pElec uses the SHMS replay.
+
+If average BCM branches are needed for an elastic run, use the corresponding
+COIN, HMS, or SHMS AddAvgBcm replay described below. The particle orientation
+does not change ordinary or helicity-scaler decoding.
+
 b. have scaler .root files ready. Filename pattern:
 COIN: scaler_helicity_replay_coin_<run>_<events>.root
 HMSDIS: scaler_helicity_replay_hms_<run>_<events>.root
