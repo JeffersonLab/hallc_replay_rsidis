@@ -34,18 +34,11 @@ line and adopt following for running the program:
 root [0] .L ScalerCalib.C+
 root [1] .x run.C("/path/to/scaler/root/file", "H_or_P");
 
-2. Current workflow is like this:
-a. have scaler .root files ready
-b. run ScalerCalib on scaler .root files to generate bcmcurrent_<run>.param files
-in the current working directory (CALIBRATION/bcm_current_map/)
-c. Edit the scaler replay scripts to load these new .param files
-d. replay again with this edited scaler script to create .root files with average
-bcm current branches in tree "T".
+2. The BCM current workflow uses the dedicated scaler-only replays to make the
+calibration input, then uses the standard production replays to write average
+BCM currents into physics-event tree T.
 
-This workflow requires us to change a replay script which is already running and
-heavily-used by other users. So, I adopted following workflow:
-
-a. have scaler replay scripts ready. They are:
+a. The scaler-only replay scripts are:
 SCRIPTS/COIN/PRODUCTION/replay_helicity_and_scalers_coin.C
 SCRIPTS/HMS/PRODUCTION/replay_helicity_and_scalers_hms.C
 SCRIPTS/SHMS/PRODUCTION/replay_helicity_and_scalers_shms.C
@@ -56,29 +49,19 @@ HEEP and HEE runs use these same spectrometer-based scaler replays:
 - HEE hElec uses the HMS replay.
 - HEE pElec uses the SHMS replay.
 
-If average BCM branches are needed for an elastic run, use the corresponding
-COIN, HMS, or SHMS AddAvgBcm replay described below. The particle orientation
-does not change ordinary or helicity-scaler decoding.
+The particle orientation does not change ordinary or helicity-scaler decoding.
 
-b. have scaler .root files ready. Filename pattern:
+b. Run the appropriate scaler-only replay. Its ROOT filename pattern is:
 COIN: scaler_helicity_replay_coin_<run>_<events>.root
 HMSDIS: scaler_helicity_replay_hms_<run>_<events>.root
 SHMSDIS: scaler_helicity_replay_shms_<run>_<events>.root
 
-c. run ScalerCalib on .root files to generate bcmcurrent_<run>.param at:
+c. Run ScalerCalib on the scaler ROOT file to generate bcmcurrent_<run>.param at:
 PARAM/<HMS, SHMS>/BCM/CALIB/bcmcurrent_<run>.param
 note:
 1. I edited ScalerCalib to check and create these subdirectories BCM/, CALIB/.
 2. I decided to use spec_name = "P" for COIN cases, so .param for COIN will go
 to PARAM/SHMS/BCM/CALIB/.
-
-d. In order to avoid editing already-running and heavily-used versions of replay
-scripts, I kept edited versions of scaler replay scripts at:
-SCRIPTS/COIN/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_coin.C
-SCRIPTS/HMS/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_hms.C
-SCRIPTS/SHMS/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_shms.C
-replaying with these scripts will add average BCM current branches to "T" and
-overwrite the existing scaler .root file.
 
 Run ScalerCalib from CALIBRATION/bcm_current_map using:
 
@@ -94,21 +77,25 @@ SHMSDIS (reads TSP and writes under PARAM/SHMS):
 root [0] .L ScalerCalib.C+
 root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_shms_<run>_<events>.root", "P");
 
-Run the corresponding AddAvgBcm replay from the repository root, using the
-same run number and MaxEvent value as the scaler-only replay:
+d. Run the corresponding standard production replay from the repository root:
 
-COIN:
-hcana -q 'SCRIPTS/COIN/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_coin.C(<run>,<events>)'
+COIN hElec_pProt:
+hcana -q 'SCRIPTS/COIN/PRODUCTION/replay_production_coin_hElec_pProt.C(<run>,<events>)'
 
-HMSDIS:
-hcana -q 'SCRIPTS/HMS/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_hms.C(<run>,<events>)'
+COIN pElec_hProt:
+hcana -q 'SCRIPTS/COIN/PRODUCTION/replay_production_coin_pElec_hProt.C(<run>,<events>)'
 
-SHMSDIS:
-hcana -q 'SCRIPTS/SHMS/PRODUCTION/AddAvgBcm/replay_helicity_and_scalers_shms.C(<run>,<events>)'
+HMSDIS or HEE hElec:
+hcana -q 'SCRIPTS/HMS/PRODUCTION/replay_production_hms_coin.C(<run>,<events>)'
 
-Using the same run number and MaxEvent makes the AddAvgBcm replay overwrite
-the corresponding scaler-only ROOT file.
+SHMSDIS or HEE pElec:
+hcana -q 'SCRIPTS/SHMS/PRODUCTION/replay_production_shms_coin.C(<run>,<events>)'
 
 SetPrintFlag(1) in run.C writes all five BCM current arrays required by
-THcBCMCurrent. The AddAvgBcm replay maps each scaler interval onto physics
-events and writes H.bcm.* or P.bcm.* branches in tree T.
+THcBCMCurrent. When the run-specific parameter file is available, the production
+replay maps each scaler interval onto physics events and writes H.bcm.* or
+P.bcm.* branches in tree T.
+
+If the run-specific parameter file is absent, the production replay prints a
+warning and continues normally without average BCM current branches. An existing
+but invalid parameter file remains a replay configuration error.
