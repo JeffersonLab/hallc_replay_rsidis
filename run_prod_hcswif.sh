@@ -8,7 +8,7 @@
 
 source /etc/profile
 module use /group/c-rsidis/modulefiles/
-module load hcana
+module load hcana/1.5.2
 
 run_number=$1
 events=$2
