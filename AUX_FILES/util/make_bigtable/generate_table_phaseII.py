@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 
 def hms_dir(run_number):
     return f"/net/cdaq/cdaql3data/cdaq/hallc-online-rsidis2025/REPORT_OUTPUT/HMS/PRODUCTION/replay_hms_coin_production_{run_number}_-1.report"
@@ -10,93 +11,97 @@ def shms_dir(run_number):
 def coin_dir(run_number):
     return f"/net/cdaq/cdaql3data/cdaq/hallc-online-rsidis2025/REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_production_{run_number}_-1.report"
 
+def find_variable(line_number, pattern):
+    return line_number, pattern
+
 # Mapping: variable -> (line_index, char_start, char_end)
 HMS_MAP = {
-    "BCM1_Q": (46,22,32),
-    "BCM1_I": (39,22,29),
-    "BCM2_Q": (47,22,32),
-    "BCM2_I": (40,22,29),
-    "BCM4A_Q": (48,22,32),
-    "BCM4A_I": (41,23,29),
-    "BCM4B_Q": (49,22,32),
-    "BCM4B_I": (42,23,29),
-    "BCM4C_Q": (50,22,32),
-    "BCM4C_I": (43,23,29),
-    "h_esing_Eff": (351,37,43),
-    "h_hadron_Eff": (352,37,43),
-    "ps1" : (63,12,15),
-    "ps2" : (64,12,15),
-    "ps3" : (65,12,15),
-    "ps4" : (66,12,15),
-    "ps5" : (67,12,15),
-    "ps6" : (68,12,15),
-    "pTRIG3" : (126,10,20),
-    "pTRIG4" : (127,10,18),
-    "phys_triggers": (91,32,41),
-    "hEL_REAL": (101,11,19),
-    "electr_deadtime": (175,42,50),
-    "h_EL_CLEAN": (102,21,27),
-    "p_EL_CLEAN": (121,22,27),
+    "BCM1_Q": find_variable(46,"BCM1  Beam Cut Charge: "),
+    "BCM1_I": find_variable(39,"BCM1 Beam Cut Current: "),
+    "BCM2_Q": find_variable(47,"BCM2  Beam Cut Charge: "),
+    "BCM2_I": find_variable(40,"BCM2 Beam Cut Current: "),
+    "BCM4A_Q": find_variable(48,"BCM4A Beam Cut Charge: "),
+    "BCM4A_I": find_variable(41,"BCM4A Beam Cut Current: "),
+    "BCM4B_Q": find_variable(49,"BCM4B Beam Cut Charge: "),
+    "BCM4B_I": find_variable(42,"BCM4B Beam Cut Current: "),
+    "BCM4C_Q": find_variable(50,"BCM4C Beam Cut Charge: "),
+    "BCM4C_I": find_variable(43,"BCM4C Beam Cut Current: "),
+    "h_esing_Eff": find_variable(351,"E SING FID TRACK EFFIC         :"),
+    "h_hadron_Eff": find_variable(352,"HADRON SING FID TRACK EFFIC    :"),
+    "ps1" : find_variable(63,"Ps1_factor ="),
+    "ps2" : find_variable(64,"Ps2_factor ="),
+    "ps3" : find_variable(65,"Ps3_factor ="),
+    "ps4" : find_variable(66,"Ps4_factor ="),
+    "ps5" : find_variable(67,"Ps5_factor ="),
+    "ps6" : find_variable(68,"Ps6_factor ="),
+    "pTRIG3" : find_variable(126,"pTRIG3 :"),
+    "pTRIG4" : find_variable(127,"pTRIG4 :"),
+    "phys_triggers": find_variable(91,"Physics Triggers (current cut) :"),
+    "hEL_REAL": find_variable(101,"hEL_REAL  :"),
+    "pEL_REAL:": find_variable(120, "pEL_REAL  :"),
+    "electr_deadtime": find_variable(175,"OG 6 GeV Electronic Live Time (100, 150) :"),
+    "h_EL_CLEAN": find_variable(102,"hEL_CLEAN :"),
+    "p_EL_CLEAN": find_variable(121,"pEL_CLEAN :"),
 }
 
 SHMS_MAP = {
-    "BCM1_Q": (46,22,31),
-    "BCM1_I": (39,22,29),
-    "BCM2_Q": (47,22,31),
-    "BCM2_I": (40,22,29),
-    "BCM4A_Q": (48,22,31),
-    "BCM4A_I": (41,23,30),
-    "BCM4B_Q": (49,22,31),
-    "BCM4B_I": (42,23,30),
-    "BCM4C_Q": (50,22,31),
-    "BCM4C_I": (43,23,30),
-    "p_esing_Eff": (377,35,41),
-    "p_hadron_Eff": (378,35,41),
-    "ps1" : (57,13,15),
-    "ps2" : (58,13,15),
-    "ps3" : (59,13,15),
-    "ps4" : (60,13,15),
-    "ps5" : (61,13,15),
-    "ps6" : (62,13,15),
-    "pTRIG1" : (116,10,20),
-    "pTRIG2" : (117,10,20),
-    "phys_triggers": (85,32,41),
-    "hEL_REAL": (112,11,21),
-    "electr_deadtime": (167,42,50),
-    "h_EL_CLEAN": (102,19,25),
-    "p_EL_CLEAN": (121,21,29),
+    "BCM1_Q": find_variable(46,"BCM1  Beam Cut Charge: "),
+    "BCM1_I": find_variable(39,"BCM1 Beam Cut Current: "),
+    "BCM2_Q": find_variable(47,"BCM2  Beam Cut Charge: "),
+    "BCM2_I": find_variable(40,"BCM2 Beam Cut Current: "),
+    "BCM4A_Q": find_variable(48,"BCM4A Beam Cut Charge: "),
+    "BCM4A_I": find_variable(41,"BCM4A Beam Cut Current: "),
+    "BCM4B_Q": find_variable(49,"BCM4B Beam Cut Charge: "),
+    "BCM4B_I": find_variable(42,"BCM4B Beam Cut Current: "),
+    "BCM4C_Q": find_variable(50,"BCM4B Beam Cut Charge: "),
+    "BCM4C_I": find_variable(43,"BCM4C Beam Cut Charge: "),
+    "p_esing_Eff": find_variable(377,"E SING FID TRACK EFFIC         :"),
+    "p_hadron_Eff": find_variable(378,"HADRON SING FID TRACK EFFIC    :"),
+    "ps1" : find_variable(57,"Ps1_factor ="),
+    "ps2" : find_variable(58,"Ps2_factor ="),
+    "ps3" : find_variable(59,"Ps3_factor ="),
+    "ps4" : find_variable(60,"Ps4_factor ="),
+    "ps5" : find_variable(61,"Ps5_factor ="),
+    "ps6" : find_variable(62,"Ps6_factor ="),
+    "pTRIG1" : find_variable(116,"pTRIG1 :"),
+    "pTRIG2" : find_variable(117,"pTRIG4 :"),
+    "phys_triggers": find_variable(85,"Physics Triggers (current cut) :"),
+    "hEL_REAL": find_variable(112,"hEL_REAL  :"),
+    "electr_deadtime": find_variable(167,"OG 6 GeV Electronic Live Time (100, 150) :"),
+    "h_EL_CLEAN": find_variable(102,"hEL_CLEAN :"),
+    "p_EL_CLEAN": find_variable(121,"pEL_CLEAN :"),
 }
 
 COIN_MAP = {
-    "BCM1_Q": (54,26,33),
-    "BCM1_I": (47,26,33),
-    "BCM2_Q": (55,26,33),
-    "BCM2_I": (48,26,33),
-    "BCM4A_Q": (56,26,33),
-    "BCM4A_I": (49,27,34),
-    "BCM4B_Q": (57,26,33),
-    "BCM4B_I": (50,27,34),
-    "BCM4C_Q": (58,26,33),
-    "BCM4C_I": (51,27,34),
-    "h_esing_Eff": (648,36,43),
-    "h_hadron_Eff": (649,36,43),
-    "p_esing_Eff": (507,35,41),
-    "p_hadron_Eff": (508,35,41),
-    "ps1" : (105,12,15),
-    "ps2" : (106,12,15),
-    "ps3" : (107,12,15),
-    "ps4" : (108,12,15),
-    "ps5" : (109,12,15),
-    "ps6" : (110,12,15),
-    "phys_triggers": (83,32,41),
-    "hEL_REAL": (92,11,19),
-    "electr_deadtime": (264,60,68),
-    "helicity_C": (1234,28,38),
-    "helicity_A": (1244,38,52),
-    "h_EL_CLEAN": (206,29,35),
-    "p_EL_CLEAN": (180,33,40),
-    "ps5_comp_livetime": (254, 58, 67),
-    "ps6_comp_livetime": (257, 58, 67),
+    "BCM1_Q": find_variable(54,"HMS BCM1  Beam Cut Charge:"),
+    "BCM1_I": find_variable(47,"HMS BCM1 Beam Cut Current:"),
+    "BCM2_Q": find_variable(55,"HMS BCM2  Beam Cut Charge:"),
+    "BCM2_I": find_variable(48,"HMS BCM2 Beam Cut Current:"),
+    "BCM4A_Q": find_variable(56,"HMS BCM4A Beam Cut Charge:"),
+    "BCM4A_I": find_variable(49,"HMS BCM4A Beam Cut Current:"),
+    "BCM4B_Q": find_variable(57,"HMS BCM4B Beam Cut Charge:"),
+    "BCM4B_I": find_variable(50,"HMS BCM4B Beam Cut Current:"),
+    "BCM4C_Q": find_variable(58,"HMS BCM4C Beam Cut Charge:"),
+    "BCM4C_I": find_variable(51,"HMS BCM4C Beam Cut Current:"),
+    "h_esing_Eff": find_variable(648,"E SING FID TRACK EFFIC         :"),
+    "h_hadron_Eff": find_variable(649,"HADRON SING FID TRACK EFFIC    :"),
+    "p_esing_Eff": find_variable(507,"E SING FID TRACK EFFIC         :"),
+    "p_hadron_Eff": find_variable(508,"HADRON SING FID TRACK EFFIC    :"),
+    "ps1" : find_variable(105,"Ps1_factor ="),
+    "ps2" : find_variable(106,"Ps2_factor ="),
+    "ps3" : find_variable(107,"Ps3_factor ="),
+    "ps4" : find_variable(108,"Ps4_factor ="),
+    "ps5" : find_variable(109,"Ps5_factor ="),
+    "ps6" : find_variable(110,"Ps6_factor ="),
+    "phys_triggers": find_variable(146,"HMS Accepted Physics Triggers       :"),
+    "hEL_REAL": find_variable(205,"HMS_hEL_REAL  :"),
+    "electr_deadtime": find_variable(279,"ROC2 OG 6 GeV Electronic Dead Time (100, 150) (no BCM cut) :"),
+    "helicity_C": find_variable(1248,"BCM2  Helicity Gated Charge:"),
+    "helicity_A": find_variable(1258,"BCM2  Helicity Gated Charge Asymmetry:"),
+    "h_EL_CLEAN": find_variable(206,"HMS_hEL_CLEAN :"),
+    "p_EL_CLEAN": find_variable(180,"SHMS_pEL_CLEAN :"),
+    "ps5_comp_livetime": find_variable(254,"ROC2 Pre-Scaled Ps5 ROC2 Computer Live Time (no BCM cut) :"),
+    "ps6_comp_livetime": find_variable(257,"ROC2 Pre-Scaled Ps6 ROC2 Computer Live Time (no BCM cut) :"),
 }
 
 run_type_map = {
@@ -107,21 +112,44 @@ run_type_map = {
 
 def parse_report_file(report_path, mapping):
     props = {}
+
     if not os.path.exists(report_path):
-        # If file doesn't exist, return empty dict
         return props
 
     with open(report_path, "r") as f:
         lines = f.readlines()
-        for var, (line_idx, start, end) in mapping.items():
-            try:
-                segment = lines[line_idx][start:end].strip()
-                # Try to convert to float if possible
-                props[var] = float(segment)
-#                if (var == "ps1" or var == "ps2" or var =="ps3" or var == "ps4" or var == "ps5" or var =="ps6"):
-#                    props[var] = segment
-            except (IndexError, ValueError):
-                props[var] = None
+
+    for var, (line_number, pattern) in mapping.items():
+        try:
+            line = lines[line_number]
+
+            # Make sure we're looking at the expected line
+            if pattern not in line:
+                raise ValueError(
+                    f"Expected '{pattern}' on line {line_number}, "
+                    f"but found:\n{line.strip()}"
+                )
+
+            # Everything after the identifying pattern
+            value_string = line.split(pattern, 1)[1]
+
+            # Extract the first numerical value
+            match = re.search(
+                r"[-+]?\d*\.?\d+(?:[Ee][-+]?\d+)?",
+                value_string
+            )
+
+            if match:
+                props[var] = float(match.group())
+            else:
+                raise ValueError(
+                    f"No numerical value found after '{pattern}' "
+                    f"on line {line_number}"
+                )
+
+        except (IndexError, ValueError):
+            props[var] = None
+
     return props
 
 
@@ -210,6 +238,22 @@ def load_ihwp_table(ihwp_csv_path):
                 }
     return ihwp_map
 
+def load_coin_block_ratios(coin_block_ratios_csv_path):
+    coin_block_ratios_map = {}
+    if not os.path.exists(coin_block_ratios_csv_path):
+        print(f"⚠️ Coin block ratios file not found: {coin_block_ratios_csv_path}")
+        return coin_block_ratios_map
+
+    with open(coin_block_ratios_csv_path, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            run = row.get("run")
+            if run:
+                coin_block_ratios_map[str(run)] = {
+                    "coinblock_ratio": row.get("ratio", "")
+                }
+    return coin_block_ratios_map
+
 
 # === New Kinematic Conversion Table ===
 KINEMATIC_TABLE = [
@@ -291,14 +335,14 @@ def helicity_charge_hp(C,A):
         return -999
     else:
         BCM2_Q_hp = (C/2)*(1+A)
-    return round(BCM2_Q_hp,6)
+    return round(BCM2_Q_hp,5)
 
 def helicity_charge_hm(C,A):
     if any(v in (-999,None) for v in [C,A]):
         return -999
     else:
         BCM2_Q_hm = (C/2)*(1-A)
-    return round(BCM2_Q_hm,6)
+    return round(BCM2_Q_hm,5)
 
 
 
@@ -308,6 +352,7 @@ def collect_run_info(input_csv, output_csv, run_type_map):
     issues = []
 
     # ihwp_map = load_ihwp_table("updated_merged_run_start_stop_log_100625.csv")
+    coin_block_ratios_map = load_coin_block_ratios("/home/cdaq/users/jgilguti/coin_block/coin_block_ratios.csv")
 
     with open(input_csv, newline="") as f:
         reader = csv.DictReader(f)
@@ -350,6 +395,7 @@ def collect_run_info(input_csv, output_csv, run_type_map):
                             props["comp_livetime"] = round(ps6_comp_livetime / 100, 5)
                     
 #                    props["comp_livetime"] = 1.0
+# Uncomment when find out line number for helicity_A and helicity_C:
                     props["BCM2_Q_hp"] = helicity_charge_hp(props["helicity_C"], props["helicity_A"])
                     props["BCM2_Q_hm"] = helicity_charge_hm(props["helicity_C"], props["helicity_A"])
                     
@@ -406,7 +452,7 @@ def collect_run_info(input_csv, output_csv, run_type_map):
                 props = {var: -999 for var in mapping.keys()}
 
             # Include helicity based charge information:
- #           props["BCM2_Q_hp"], props["BCM2_Q_hm"] = helicity_charge(props["helicity_C"],props["helicity_A"])
+#            props["BCM2_Q_hp"], props["BCM2_Q_hm"] = helicity_charge(props["helicity_C"],props["helicity_A"])
 
             # Load extra info from output_get_good_coin_ev
             extra_props = load_extra_info(run_number, run_type, issues)
@@ -431,6 +477,9 @@ def collect_run_info(input_csv, output_csv, run_type_map):
             merged["IHWP"]= -999
             merged["start_time"] = -999
             merged["stop_time"] = -999
+
+            coin_block_ratio_info = coin_block_ratios_map.get(str(run_number), {})
+            merged["coinblock_ratio"] = coin_block_ratio_info.get("coinblock_ratio", -999)
 
             kin = find_kinematics(
                 float(row["ebeam"]),
@@ -465,9 +514,12 @@ def collect_run_info(input_csv, output_csv, run_type_map):
 # "fan_mean", "fan_stdev",
 "boil_corr",
 #start and stop times
-# "IHWP", "start_time", "stop_time",
+#"start_time", "stop_time",
+"IHWP",
+#coin block ratio
+"coinblock_ratio",
 #helicity based charge                                 
-#"BCM2_Q_hp", "BCM2_Q_hm",
+"BCM2_Q_hp", "BCM2_Q_hm",
 "h_EL_CLEAN", "p_EL_CLEAN"]
 
     for row in results:
