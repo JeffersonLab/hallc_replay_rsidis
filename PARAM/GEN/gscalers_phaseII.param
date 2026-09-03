@@ -1,0 +1,35 @@
+; DB Calibration from runs 27571, 27961, and 28435 for R-SIDIS phase II
+;
+; This comment is from DJM from phase I :
+;===================================================================================================================================================
+; Use BCM2 for normalization. It is based on a global fit to 10-45 muA + saturation corrections above 50 muA. (BCM1 was not useful.) 
+; The gains of BCM4A,B,C drifted by ~1% during R-SIDIS. For each, I averaged their gains and offsets from the two calibrations for 5-60 muA. 
+; In these new calibrations, BCM2 should generally track with BCM4A,B,C at the 0.5% level, but down at 5 muA this discrepancy will grow to 1% due to a 50 nA offset ambiguity. 
+;
+; The online calibrations were decent, as indicated by Deb's long term stability plots. Most of the percent-scale discrepancies can be explained by the fact that
+; 1. the BCM1,2 saturation corrections were not enabled above 50 muA (I enable them below), and 
+; 2. there was apparently a typo in the gain for BCM4B. (I fix that here). 
+;====================================================================================================================================================
+; R-SIDIS Phase II comment :  
+; 1. BCM 1, BCM 2 : Global calibration parameters are used here (combinations of all three runs shown above)
+; 2. BCM 1, BCM 2 : Linear fit until 50 uA., then (linear fit + quadratic correction), all three params were flotting 
+; 3. BCM 4A, BCM 4C  : calibration parameters from run 27961 are used
+; 4. BCM 4A : Linear Fit for the whole current range 
+; 5. BCM 4C : Linear Fit until 60 uA , above 60 uA points are not included in the fit due to saturation  
+; 6. BCM 4B : is not being calibrated for this phase II, I will keep the same numbers as in "gscalers.param" 
+; 7. unser params unchanged (same as phase I)    
+;
+gNumBCMs    = 6
+gBCM_Names  = "   BCM1      BCM2      Unser	   BCM4A     BCM4B     BCM4C"
+gBCM_Gain   =  5790.00,   5634.0,     400.6,   11790.0,   6561.3,  14350.0
+gBCM_Offset =   3809.0,  251600.,    360000,    1067.0,    183.7,   1625.0
+;
+; I'm re-enabling these small saturation corrections which disappeared during LAD. They are needed for BCM1,2 above 50 muA. 
+gBCM_SatOffset =         50.,       50.,    1000.,       1000.,     1000.,    1000. 
+gBCM_SatQuadratic =  0.00147,   0.00134,       0.,          0.,        0.0,      0.0 
+;
+; DJM The experimenters need to own this current threshold. Data were taken down to 5 muA. I'm setting the threshold to half that. 
+gBCM_Current_threshold = 1.0
+;
+; index = 0 to gNumBCMs-1
+gBCM_Current_threshold_index = 1

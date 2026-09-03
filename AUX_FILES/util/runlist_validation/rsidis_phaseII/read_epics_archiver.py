@@ -134,8 +134,10 @@ if __name__ == "__main__":
                  "ecQ1_I_coarse", "ecQ1_Set_Current", "ecQ2_I_coarse", "ecQ2_Set_Current", "ecQ3_I_coarse", "ecQ3_Set_Current", 
                  "ecSDI_I_coarse", "ecSDI_Set_Current", "ecSHB_I_coarse", "ecSHB_Set_Current", "ecSQ1_I_coarse", "ecSQ1_Set_Current",
                  "ecSQ2_I_coarse", "ecSQ2_Set_Current", "ecSQ3_I_coarse", "ecSQ3_Set_Current",
-                 "ecHMS_Angle", "ecSHMS_Angle", "hcBDSPOS", "hcL1_Fan_Freq_R", "hcL2_Fan_Freq_R"]
-    output_dir = "output/read_epics_archiver"
+                 "ecHMS_Angle", "ecSHMS_Angle", "hcBDSPOS", "hcL1_Fan_Freq_R", "hcL2_Fan_Freq_R",
+                 "IGL1I00OD16_16"]
+    #output_dir = "output/read_epics_archiver"
+    output_dir = "."
 
     # ADDED: choose run range here
-    main(run_csv, variables, output_dir, min_run=27106, max_run=28471)
+    main(run_csv, variables, output_dir, min_run=28266, max_run=28267)
