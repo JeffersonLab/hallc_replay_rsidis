@@ -1114,7 +1114,7 @@
 28087   07/26/26        20:28	   8.5814         50     Dummy   +2.280  42.005   -7.070     12.455    6,-1,-1,-1,-1,-1		 SHMSHEE	Check replay, CODA might have crushed for this run(did prescale change?)
 28088   07/26/26        20:40	   8.5814         50     Dummy   +2.280  42.005   -7.070     12.455    6,-1,-1,-1,-1,-1		 SHMSHEE
 28089   07/26/26        21:05	   8.5814         60     LD2     +2.280  42.005   -7.070     12.455    6,-1,-1,-1,-1,-1		 SHMSHEE	Current is different on runseet and logbook
-28090   07/26/26        21:24	   8.5814         30     LD2     +2.280  42.005   -7.070     12.455    6,-1,-1,-1,-1,-1		 SHMSHEE	Current is different on runsheet and logbook
+28090   07/26/26        21:24	   8.5814         30     LD2     +2.280  42.005   -7.070     12.455    5,-1,-1,-1,-1,-1		 SHMSHEE	Current is different on runsheet and logbook
 ! === ---------------- ===
 ! Starting HMSHEEP SETTING 2:
 28091   07/26/26        23:35	   8.5814         70     LH2     -5.440  21.030   +3.990     28.530    -1,-1,-1,-1,0,-1		 HMSHEEP

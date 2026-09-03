@@ -66,7 +66,7 @@ int get_good_heep_ev(int rnum,                 // Run number to analyze
 		     double descoinev=100000., // desired number of real coin events
 		     std::string indirroot="ROOTfiles", // Path to directory containing input ROOT file
 		     std::string indirreport="REPORT_OUTPUT/COIN/PRODUCTION", // Path to directory containing input report file
-		     std::string outdirplot="HISTOGRAMS/COIN/PDF", // Path to directory to save output plots
+		     std::string outdirplot="HISTOGRAMS/COIN", // Path to directory to save output plots
 		     std::string outfilebase="output_get_good_coin_ev") // output filename prefix
 {
   gErrorIgnoreLevel = kError; // Ignores all ROOT warnings
@@ -205,16 +205,22 @@ int get_good_heep_ev(int rnum,                 // Run number to analyze
   //fout->Write();
   
   // Writing out the canvas
-  TString outplot = Form("%s/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  TString outplot = Form("%s/PDF/%s_%d_%d.pdf",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
   ccoin->SaveAs(Form("%s[",outplot.Data()));
   ccoin->SaveAs(Form("%s",outplot.Data())); 
   cphys->SaveAs(Form("%s",outplot.Data()));
   cbeta->SaveAs(Form("%s",outplot.Data()));  
   cbeta->SaveAs(Form("%s]",outplot.Data()));
 
+  TString outpng = Form("%s/PNG/%s_%d_%d",outdirplot.c_str(),outfilebase.c_str(),rnum,nevent);
+  ccoin->SaveAs(Form("%s_coin.png",outpng.Data()));
+  cphys->SaveAs(Form("%s_phys.png",outpng.Data()));
+  cbeta->SaveAs(Form("%s_beta.png",outpng.Data()));
+  
   std::cout << "------" << std::endl;
   std::cout << " Output PDF file  : " << outplot << std::endl;
-  std::cout << " Output ROOT file  : " << outfile << std::endl;  
+  std::cout << " Output ROOT file  : " << outfile << std::endl;
+  std::cout << " Output PNG file  : " << outpng << std::endl;
   std::cout << "------" << std::endl << std::endl;
   
   // Reporting macro processing time and resources
