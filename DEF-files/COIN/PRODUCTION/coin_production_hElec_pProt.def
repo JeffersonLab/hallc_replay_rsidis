@@ -24,7 +24,6 @@ block P.gtr.*
 block P.kin.*
 #block P.rb.*
 block P.react.*
-block P.bcm.*
 
 begin epics
 IBC3H00CRCUR4
