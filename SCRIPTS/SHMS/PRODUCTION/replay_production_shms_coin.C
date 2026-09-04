@@ -47,13 +47,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   const char* CurrentFileNamePattern =
     "PARAM/SHMS/BCM/CALIB/bcmcurrent_%d.param";
   TString CurrentFileName = Form(CurrentFileNamePattern, RunNumber);
-  Bool_t AddBcmCurrent = !gSystem->AccessPathName(CurrentFileName.Data());
-  if(AddBcmCurrent) {
-    gHcParms->Load(CurrentFileName.Data());
-  } else {
-    cerr << "WARNING: BCM current parameter file " << CurrentFileName
-         << " was not found. Continuing without P.bcm branches." << endl;
-  }
+  gHcParms->Load(CurrentFileName.Data());
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -87,11 +81,9 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   THcShower* cal = new THcShower("cal", "Calorimeter");
   SHMS->AddDetector(cal);
 
-  if(AddBcmCurrent) {
-    THcBCMCurrent* pbc =
-      new THcBCMCurrent("P.bcm", "BCM current check");
-    gHaPhysics->Add(pbc);
-  }
+  THcBCMCurrent* pbc =
+    new THcBCMCurrent("P.bcm", "BCM current check");
+  gHaPhysics->Add(pbc);
 
   // Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");

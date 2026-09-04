@@ -92,10 +92,10 @@ SHMSDIS or HEE pElec:
 hcana -q 'SCRIPTS/SHMS/PRODUCTION/replay_production_shms_coin.C(<run>,<events>)'
 
 SetPrintFlag(1) in run.C writes all five BCM current arrays required by
-THcBCMCurrent. When the run-specific parameter file is available, the production
-replay maps each scaler interval onto physics events and writes H.bcm.* or
-P.bcm.* branches in tree T.
+THcBCMCurrent. The run-specific parameter file is required before starting a
+production replay. The production replay loads that file, maps each scaler
+interval onto physics events, and writes H.bcm.* or P.bcm.* branches in tree T.
 
-If the run-specific parameter file is absent, the production replay prints a
-warning and continues normally without average BCM current branches. An existing
-but invalid parameter file remains a replay configuration error.
+If the run-specific parameter file is absent or invalid, the production replay
+stops with a configuration error. Generate and validate the parameter file with
+ScalerCalib before running the corresponding production replay.
