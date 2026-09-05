@@ -1,19 +1,101 @@
-This script runs over a scaler tree (TSH) and save bcm current values
-for BCM1, BCM2, (BCM4a, BCM4b, BCM17) as well as the event number 
-for each scaler event.
+This script runs over an HMS scaler tree (TSH) or SHMS scaler tree (TSP) and
+saves BCM current values for BCM1, BCM2, BCM4A, BCM4B, and BCM4C, as well as
+the event number for each scaler event.
 
 How to make a parameter file for the average BCM current information
 
-- Use ROOT version 6.08 to use R__LOAD_LIBRARY
-- Do this once to make shared libraries (or after modifying the marco)
+- Do this once to make shared libraries (or after modifying the macro)
 > root -b
 root [0] .L ScalerCalib.C+
 
 To run a script:
-> roob -b
-root [0] .x run.C("/path/Scaler root output file");
+> root -b
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("/path/to/scaler/root/file", "H_or_P");
 
 It prints out 
       # of scaler read, 
       average bcm current values for each bcm
       corresponding event number for each scaler event
+
+
+******************** Comments by rparvez ********************
+Date: Aug 13, 2026
+
+1. With cdaq ROOT 6.36.04, ACLiC places the library under .root_build_dir.
+The bare library name in R__LOAD_LIBRARY is then not found through ROOT's
+library search path. However, doing:
+> root -b
+root [0] .L ScalerCalib.C+
+loads the library in current scope. So, I decided to comment R__LOAD_LIBRARY
+line and adopt following for running the program:
+
+> root -b
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("/path/to/scaler/root/file", "H_or_P");
+
+2. The BCM current workflow uses the dedicated scaler-only replays to make the
+calibration input, then uses the standard production replays to write average
+BCM currents into physics-event tree T.
+
+a. The scaler-only replay scripts are:
+SCRIPTS/COIN/PRODUCTION/replay_helicity_and_scalers_coin.C
+SCRIPTS/HMS/PRODUCTION/replay_helicity_and_scalers_hms.C
+SCRIPTS/SHMS/PRODUCTION/replay_helicity_and_scalers_shms.C
+
+HEEP and HEE runs use these same spectrometer-based scaler replays:
+- HEEP hElec_pProt and pElec_hProt use the COIN replay because both
+  spectrometer arms are read out.
+- HEE hElec uses the HMS replay.
+- HEE pElec uses the SHMS replay.
+
+The particle orientation does not change ordinary or helicity-scaler decoding.
+
+b. Run the appropriate scaler-only replay. Its ROOT filename pattern is:
+COIN: scaler_helicity_replay_coin_<run>_<events>.root
+HMSDIS: scaler_helicity_replay_hms_<run>_<events>.root
+SHMSDIS: scaler_helicity_replay_shms_<run>_<events>.root
+
+c. Run ScalerCalib on the scaler ROOT file to generate bcmcurrent_<run>.param at:
+PARAM/<HMS, SHMS>/BCM/CALIB/bcmcurrent_<run>.param
+note:
+1. I edited ScalerCalib to check and create these subdirectories BCM/, CALIB/.
+2. I decided to use spec_name = "P" for COIN cases, so .param for COIN will go
+to PARAM/SHMS/BCM/CALIB/.
+
+Run ScalerCalib from CALIBRATION/bcm_current_map using:
+
+COIN (reads TSP and writes under PARAM/SHMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_coin_<run>_<events>.root", "P");
+
+HMSDIS (reads TSH and writes under PARAM/HMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_hms_<run>_<events>.root", "H");
+
+SHMSDIS (reads TSP and writes under PARAM/SHMS):
+root [0] .L ScalerCalib.C+
+root [1] .x run.C("../../ROOTfiles/scaler_helicity_replay_shms_<run>_<events>.root", "P");
+
+d. Run the corresponding standard production replay from the repository root:
+
+COIN hElec_pProt:
+hcana -q 'SCRIPTS/COIN/PRODUCTION/replay_production_coin_hElec_pProt.C(<run>,<events>)'
+
+COIN pElec_hProt:
+hcana -q 'SCRIPTS/COIN/PRODUCTION/replay_production_coin_pElec_hProt.C(<run>,<events>)'
+
+HMSDIS or HEE hElec:
+hcana -q 'SCRIPTS/HMS/PRODUCTION/replay_production_hms_coin.C(<run>,<events>)'
+
+SHMSDIS or HEE pElec:
+hcana -q 'SCRIPTS/SHMS/PRODUCTION/replay_production_shms_coin.C(<run>,<events>)'
+
+SetPrintFlag(1) in run.C writes all five BCM current arrays required by
+THcBCMCurrent. The run-specific parameter file is required before starting a
+production replay. The production replay loads that file, maps each scaler
+interval onto physics events, and writes H.bcm.* or P.bcm.* branches in tree T.
+
+If the run-specific parameter file is absent or invalid, the production replay
+stops with a configuration error. Generate and validate the parameter file with
+ScalerCalib before running the corresponding production replay.

@@ -1,4 +1,5 @@
 #include <TFile.h>
+#include <TSystem.h>
 #include <TTree.h>
 
 #include "ScalerCalib.h"
@@ -40,21 +41,57 @@ int ScalerCalib::Run()
       return -1;
     }
 
-  int pos;
-  pos = filename.find("scalers_");
-
-  if(pos == -1)
-    {
-      pos = filename.find("production_");
-      runstr = (filename.substr(pos+11)).substr(0,4);
-    }
+  string run_token;
+  int pos = filename.find("scaler_helicity_replay_hms_");
+  if(pos != -1)
+    run_token = "scaler_helicity_replay_hms_";
+  else if((pos = filename.find("scaler_helicity_replay_shms_")) != -1)
+    run_token = "scaler_helicity_replay_shms_";
+  else if((pos = filename.find("scaler_helicity_replay_coin_")) != -1)
+    run_token = "scaler_helicity_replay_coin_";
+  else if((pos = filename.find("scaler_helicity_replay_")) != -1)
+    run_token = "scaler_helicity_replay_";
+  else if((pos = filename.find("scalers_")) != -1)
+    run_token = "scalers_";
+  else if((pos = filename.find("production_")) != -1)
+    run_token = "production_";
   else
     {
-      runstr = (filename.substr(pos+8)).substr(0,4);  
+      cout << "ERROR: could not determine run number from input filename: "
+           << filename << endl;
+      return -1;
     }
 
-  ofilename = "bcmcurrent_" + runstr + ".param";
+  runstr = filename.substr(pos + run_token.size(), 5);
+
+  string output_dir;
+  if(fName == "H")
+    output_dir = "../../PARAM/HMS/BCM/CALIB";
+  else if(fName == "P")
+    output_dir = "../../PARAM/SHMS/BCM/CALIB";
+  else
+    {
+      cout << "ERROR: unsupported spectrometer name: " << fName
+           << ". Use H or P." << endl;
+      return -1;
+    }
+
+  if(gSystem->AccessPathName(output_dir.c_str()) &&
+     gSystem->mkdir(output_dir.c_str(), kTRUE) != 0)
+    {
+      cout << "ERROR: could not create output directory: "
+           << output_dir << endl;
+      return -1;
+    }
+
+  ofilename = output_dir + "/bcmcurrent_" + runstr + ".param";
   outfile.open(ofilename.c_str());
+  if(!outfile.is_open())
+    {
+      cout << "ERROR: could not open output parameter file: "
+           << ofilename << endl;
+      return -1;
+    }
 
   outfile << "num_scal_reads = " << evnum.size();
   outfile << "\n" << "\n";

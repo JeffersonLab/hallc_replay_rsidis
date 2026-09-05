@@ -18,6 +18,7 @@ block P.gtr.*
 block P.kin.*
 block P.react.*
 block P.rb.*
+block P.bcm.*
 
 # Commented out prior to light.def
 # block P.tr.*

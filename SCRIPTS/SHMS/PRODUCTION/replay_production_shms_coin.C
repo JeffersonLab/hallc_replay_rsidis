@@ -44,6 +44,11 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   // Load fadc debug parameters
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
 
+  const char* CurrentFileNamePattern =
+    "PARAM/SHMS/BCM/CALIB/bcmcurrent_%d.param";
+  TString CurrentFileName = Form(CurrentFileNamePattern, RunNumber);
+  gHcParms->Load(CurrentFileName.Data());
+
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   //gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
@@ -75,6 +80,10 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   // Add calorimeter to SHMS apparatus
   THcShower* cal = new THcShower("cal", "Calorimeter");
   SHMS->AddDetector(cal);
+
+  THcBCMCurrent* pbc =
+    new THcBCMCurrent("P.bcm", "BCM current check");
+  gHaPhysics->Add(pbc);
 
   // Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");

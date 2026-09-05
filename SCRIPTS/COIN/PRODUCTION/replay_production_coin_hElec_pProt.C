@@ -47,8 +47,10 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
 
-  // const char* CurrentFileNamePattern = "low_curr_bcm/bcmcurrent_%d.param";
-  // gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
+  const char* CurrentFileNamePattern =
+    "PARAM/SHMS/BCM/CALIB/bcmcurrent_%d.param";
+  TString CurrentFileName = Form(CurrentFileNamePattern, RunNumber);
+  gHcParms->Load(CurrentFileName.Data());
 
   // ********  Start-up with no timing windows  *****************
   // Overwrite the existing reference times with
@@ -111,8 +113,9 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   THcShower* pcal = new THcShower("cal", "Calorimeter");
   SHMS->AddDetector(pcal);
 
-  // THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
-  // gHaPhysics->Add(hbc);
+  THcBCMCurrent* pbc =
+    new THcBCMCurrent("P.bcm", "BCM current check");
+  gHaPhysics->Add(pbc);
 
   // Add rastered beam apparatus
   THaApparatus* pbeam = new THcRasteredBeam("P.rb", "Rastered Beamline");

@@ -66,6 +66,7 @@ block H.cal.*good*AdcPulseInt
 # *-----------SHMS-------------*
 # ******************************
 # Small blocks
+block P.bcm.*
 block P.ngcer.*
 block P.hgcer.*
 block P.aero.*
