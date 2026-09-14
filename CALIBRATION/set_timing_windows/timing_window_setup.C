@@ -7,24 +7,29 @@ void calc_timing_windows_dc(TString, TString , TString ,TString, Double_t[], Dou
 void run_shms_timing_windows(TString file_name, TString out_file, int RunNumber, bool newWindows=false, double width=40., TString spec="shms") {
   gROOT->SetBatch(kTRUE);    //do not display plots
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
+
+  // Load SHMS parameters for SHMS trigger configuration
   if(spec.CompareTo("shms",TString::kIgnoreCase)==0) {
-    gHcParms->AddString("g_ctp_database_filename", "DBASE/SHMS/standard.database");
-    gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
-    gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
-    gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
-    // Load parameters for SHMS trigger configuration
-    gHcParms->Load("PARAM/TRIG/tshms.param");
-  } else if (spec.CompareTo("coin",TString::kIgnoreCase)==0) {
     gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
     gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
     gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
     gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
-    // Load params for COIN trigger configuration
-    gHcParms->Load("PARAM/TRIG/tcoin.param");
-    // Load fadc debug parameters
+    gHcParms->Load(gHcParms->GetString("g_ctp_ptrigdet_filename"));
+    gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
+  }
+
+  // Load SHMS parameters for COIN trigger configuration
+  else if (spec.CompareTo("coin",TString::kIgnoreCase)==0) {
+    gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
+    gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
+    gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
+    gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
+    gHcParms->Load(gHcParms->GetString("g_ctp_trigdet_filename"));
     gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
     gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
-  } else {
+  }
+
+  else {
     cout << "Unknown Spec: " << spec << endl;
     return;
   }
@@ -117,29 +122,30 @@ void run_shms_timing_windows(TString file_name, TString out_file, int RunNumber,
 
 void run_hms_timing_windows(TString file_name, TString out_file, int RunNumber, bool newWindows=false, double width=40., TString spec="hms") {
   gROOT->SetBatch(kTRUE);    //do not display plots
-  // Load Global parameters
-  // Add variables to global list.
+
+  // Load HMS parameters for HMS trigger configuration
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
   if(spec.CompareTo("hms",TString::kIgnoreCase)==0) {
-    gHcParms->AddString("g_ctp_database_filename", "DBASE/HMS/standard.database");
-    gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
-    gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
-    gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
-    // Load params for HMS trigger configuration
-    gHcParms->Load("PARAM/TRIG/thms.param");
-    // Load fadc debug parameters
-    gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
-  } else if (spec.CompareTo("coin",TString::kIgnoreCase)==0) {
     gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
     gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
     gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
     gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
-    // Load params for COIN trigger configuration
-    gHcParms->Load("PARAM/TRIG/tcoin.param");
-    // Load fadc debug parameters
+    gHcParms->Load(gHcParms->GetString("g_ctp_htrigdet_filename"), RunNumber);
+    gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
+  }
+
+  // Load HMS parameters for COIN trigger configuration
+  else if (spec.CompareTo("coin",TString::kIgnoreCase)==0) {
+    gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
+    gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
+    gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
+    gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
+    gHcParms->Load(gHcParms->GetString("g_ctp_trigdet_filename"), RunNumber);
     gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
     gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
-  } else {
+  }
+
+  else {
     cout << "Unknown Spec: " << spec << endl;
     return;
   }

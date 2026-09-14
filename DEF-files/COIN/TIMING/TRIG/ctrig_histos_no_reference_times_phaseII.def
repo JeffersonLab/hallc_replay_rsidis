@@ -98,11 +98,11 @@ TH1F pT2_tdc_time_raw_mult2  'Raw SHMS pT2 TDC Time, Mult=2; Raw TDC Time (ns); 
 TH1F pT2_tdc_time_raw_mult3  'Raw SHMS pT2 TDC Time, Mult=3; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.pT2_tdcTimeRaw  2000 6000 10000 T.coin.pT2_tdcMultiplicity==3
 
 
-TH1F pFADC_TREF_ROC2_raw_adc 'Raw SHMS pFADC_TREF_ROC2 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw 2000 2500 6500
+TH1F pFADC_TREF_ROC2_raw_adc 'Raw SHMS pFADC_TREF_ROC2 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw 2000 2000 6000
 TH1F pFADC_TREF_ROC2_adc_mult 'SHMS pFADC_TREF_ROC2 ADC Multiplicity; ADC Multiplicity; Counts / 1' T.coin.pFADC_TREF_ROC2_adcMultiplicity 15 0 5
-TH1F pFADC_TREF_ROC2_mult1  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=1; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2500 6500 T.coin.pFADC_TREF_ROC2_adcMultiplicity==1
-TH1F pFADC_TREF_ROC2_mult2  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=2; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2500 6500 T.coin.pFADC_TREF_ROC2_adcMultiplicity==2
-TH1F pFADC_TREF_ROC2_mult3  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=3; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2500 6500 T.coin.pFADC_TREF_ROC2_adcMultiplicity==3
+TH1F pFADC_TREF_ROC2_mult1  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=1; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2000 6000 T.coin.pFADC_TREF_ROC2_adcMultiplicity==1
+TH1F pFADC_TREF_ROC2_mult2  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=2; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2000 6000 T.coin.pFADC_TREF_ROC2_adcMultiplicity==2
+TH1F pFADC_TREF_ROC2_mult3  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=3; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw  2000 2000 6000 T.coin.pFADC_TREF_ROC2_adcMultiplicity==3
 
 #********************
 # Trigger Apparatus *
@@ -112,61 +112,61 @@ TH1F pFADC_TREF_ROC2_mult3  'Raw SHMS pFADC_TREF_ROC2 ADC Time, Mult=3; Raw ADC 
 # DC REFERENCE TIMES
 #-------------------
 
-TH1F hdc_time_raw_ref1  'Raw HMS HDC Reference Time 1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 17000 21000
+TH1F hdc_time_raw_ref1  'Raw HMS HDC Reference Time 1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 16000 20000
 TH1F hdc_tdc_mult_ref1 'HMS DC TDC Reference 1 Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hDCREF1_tdcMultiplicity 15 0 5
-TH1F hdc_time_raw_ref1_mult1  'Raw HMS HDC Reference Time 1, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF1_tdcMultiplicity==1
-TH1F hdc_time_raw_ref1_mult2  'Raw HMS HDC Reference Time 1, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF1_tdcMultiplicity==2
-TH1F hdc_time_raw_ref1_mult3  'Raw HMS HDC Reference Time 1, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF1_tdcMultiplicity==3
+TH1F hdc_time_raw_ref1_mult1  'Raw HMS HDC Reference Time 1, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF1_tdcMultiplicity==1
+TH1F hdc_time_raw_ref1_mult2  'Raw HMS HDC Reference Time 1, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF1_tdcMultiplicity==2
+TH1F hdc_time_raw_ref1_mult3  'Raw HMS HDC Reference Time 1, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF1_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF1_tdcMultiplicity==3
 
 
-TH1F hdc_time_raw_ref2  'Raw HMS HDC Reference Time 2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 17000 21000
+TH1F hdc_time_raw_ref2  'Raw HMS HDC Reference Time 2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 16000 20000
 TH1F hdc_tdc_mult_ref2 'HMS DC TDC Reference 2 Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hDCREF2_tdcMultiplicity 15 0 5
-TH1F hdc_time_raw_ref2_mult1  'Raw HMS HDC Reference Time 2, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF2_tdcMultiplicity==1
-TH1F hdc_time_raw_ref2_mult2  'Raw HMS HDC Reference Time 2, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF2_tdcMultiplicity==2
-TH1F hdc_time_raw_ref2_mult3  'Raw HMS HDC Reference Time 2, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF2_tdcMultiplicity==3
+TH1F hdc_time_raw_ref2_mult1  'Raw HMS HDC Reference Time 2, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF2_tdcMultiplicity==1
+TH1F hdc_time_raw_ref2_mult2  'Raw HMS HDC Reference Time 2, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF2_tdcMultiplicity==2
+TH1F hdc_time_raw_ref2_mult3  'Raw HMS HDC Reference Time 2, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF2_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF2_tdcMultiplicity==3
 
 
-TH1F hdc_time_raw_ref3  'Raw HMS HDC Reference Time 3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 17000 21000
+TH1F hdc_time_raw_ref3  'Raw HMS HDC Reference Time 3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 16000 20000
 TH1F hdc_tdc_mult_ref3 'HMS DC TDC Reference 3 Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hDCREF3_tdcMultiplicity 15 0 5
-TH1F hdc_time_raw_ref3_mult1  'Raw HMS HDC Reference Time 3, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF3_tdcMultiplicity==1
-TH1F hdc_time_raw_ref3_mult2  'Raw HMS HDC Reference Time 3, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF3_tdcMultiplicity==2
-TH1F hdc_time_raw_ref3_mult3  'Raw HMS HDC Reference Time 3, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF3_tdcMultiplicity==3
+TH1F hdc_time_raw_ref3_mult1  'Raw HMS HDC Reference Time 3, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF3_tdcMultiplicity==1
+TH1F hdc_time_raw_ref3_mult2  'Raw HMS HDC Reference Time 3, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF3_tdcMultiplicity==2
+TH1F hdc_time_raw_ref3_mult3  'Raw HMS HDC Reference Time 3, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF3_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF3_tdcMultiplicity==3
 
 
-TH1F hdc_time_raw_ref4  'Raw HMS HDC Reference Time 4; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 17000 21000
+TH1F hdc_time_raw_ref4  'Raw HMS HDC Reference Time 4; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 16000 20000
 TH1F hdc_tdc_mult_ref4 'HMS DC TDC Reference 4 Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hDCREF4_tdcMultiplicity 15 0 5
-TH1F hdc_time_raw_ref4_mult1  'Raw HMS HDC Reference Time 4, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF4_tdcMultiplicity==1
-TH1F hdc_time_raw_ref4_mult2  'Raw HMS HDC Reference Time 4, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF4_tdcMultiplicity==2
-TH1F hdc_time_raw_ref4_mult3  'Raw HMS HDC Reference Time 4, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF4_tdcMultiplicity==3
+TH1F hdc_time_raw_ref4_mult1  'Raw HMS HDC Reference Time 4, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF4_tdcMultiplicity==1
+TH1F hdc_time_raw_ref4_mult2  'Raw HMS HDC Reference Time 4, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF4_tdcMultiplicity==2
+TH1F hdc_time_raw_ref4_mult3  'Raw HMS HDC Reference Time 4, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF4_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF4_tdcMultiplicity==3
 
 
-TH1F hdc_time_raw_ref5  'Raw HMS HDC Reference Time 5; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 17000 21000
+TH1F hdc_time_raw_ref5  'Raw HMS HDC Reference Time 5; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 16000 20000
 TH1F hdc_tdc_mult_ref5 'HMS DC TDC Reference 5 Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hDCREF5_tdcMultiplicity 15 0 5
-TH1F hdc_time_raw_ref5_mult1  'Raw HMS HDC Reference Time 5, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF5_tdcMultiplicity==1
-TH1F hdc_time_raw_ref5_mult2  'Raw HMS HDC Reference Time 5, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF5_tdcMultiplicity==2
-TH1F hdc_time_raw_ref5_mult3  'Raw HMS HDC Reference Time 5, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 17000 21000 T.coin.hDCREF5_tdcMultiplicity==3
+TH1F hdc_time_raw_ref5_mult1  'Raw HMS HDC Reference Time 5, Mult=1; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF5_tdcMultiplicity==1
+TH1F hdc_time_raw_ref5_mult2  'Raw HMS HDC Reference Time 5, Mult=2; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF5_tdcMultiplicity==2
+TH1F hdc_time_raw_ref5_mult3  'Raw HMS HDC Reference Time 5, Mult=3; HMS Raw DC TDC (Channel); Counts / 0.1 ns;'  T.coin.hDCREF5_tdcTimeRaw  2000 16000 20000 T.coin.hDCREF5_tdcMultiplicity==3
 
 #------------------------
 # TRIGGER REFERENCE TIMES
 #------------------------
 
 
-TH1F hT1_tdc_time_raw 'Raw HMS hT1 Raw TDC Time; Raw TDC Time (ns); Counts / 1 ns' T.coin.hT1_tdcTimeRaw 3000 27000 33000
+TH1F hT1_tdc_time_raw 'Raw HMS hT1 Raw TDC Time; Raw TDC Time (ns); Counts / 1 ns' T.coin.hT1_tdcTimeRaw 2000 4000 8000
 TH1F hT1_tdc_mult 'HMS hT1 TDC Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hT1_tdcMultiplicity 15 0 5
-TH1F hT1_tdc_time_raw_mult1  'Raw HMS hT1 TDC Time, Mult=1; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  3000 27000 33000 T.coin.hT1_tdcMultiplicity==1
-TH1F hT1_tdc_time_raw_mult2  'Raw HMS hT1 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  3000 27000 33000 T.coin.hT1_tdcMultiplicity==2
-TH1F hT1_tdc_time_raw_mult3  'Raw HMS hT1 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  3000 27000 33000 T.coin.hT1_tdcMultiplicity==3
+TH1F hT1_tdc_time_raw_mult1  'Raw HMS hT1 TDC Time, Mult=1; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  2000 4000 8000 T.coin.hT1_tdcMultiplicity==1
+TH1F hT1_tdc_time_raw_mult2  'Raw HMS hT1 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  2000 4000 8000 T.coin.hT1_tdcMultiplicity==2
+TH1F hT1_tdc_time_raw_mult3  'Raw HMS hT1 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT1_tdcTimeRaw  2000 4000 8000 T.coin.hT1_tdcMultiplicity==3
 
 
-TH1F hT2_tdc_time_raw 'Raw HMS hT2 Good TDC Time; Raw TDC Time (ns); Counts / 1 ns' T.coin.hT2_tdcTimeRaw 3000 27000 33000
+TH1F hT2_tdc_time_raw 'Raw HMS hT2 Good TDC Time; Raw TDC Time (ns); Counts / 1 ns' T.coin.hT2_tdcTimeRaw 2000 4000 8000
 TH1F hT2_tdc_mult 'HMS hT2 TDC Multiplicity; TDC Multiplicity; Counts / 1' T.coin.hT2_tdcMultiplicity 15 0 5
-TH1F hT2_tdc_time_raw_mult1  'Raw HMS hT2 TDC Time, Mult=1; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  3000 27000 33000 T.coin.hT2_tdcMultiplicity==1
-TH1F hT2_tdc_time_raw_mult2  'Raw HMS hT2 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  3000 27000 33000 T.coin.hT2_tdcMultiplicity==2
-TH1F hT2_tdc_time_raw_mult3  'Raw HMS hT2 TDC Time, Mult=3; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  3000 27000 33000 T.coin.hT2_tdcMultiplicity==3
+TH1F hT2_tdc_time_raw_mult1  'Raw HMS hT2 TDC Time, Mult=1; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  2000 4000 8000 T.coin.hT2_tdcMultiplicity==1
+TH1F hT2_tdc_time_raw_mult2  'Raw HMS hT2 TDC Time, Mult=2; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  2000 4000 8000 T.coin.hT2_tdcMultiplicity==2
+TH1F hT2_tdc_time_raw_mult3  'Raw HMS hT2 TDC Time, Mult=3; Raw TDC Time (ns); Counts / 0.1 ns;'  T.coin.hT2_tdcTimeRaw  2000 4000 8000 T.coin.hT2_tdcMultiplicity==3
 
 
-TH1F hFADC_TREF_ROC1_raw_tdc 'Raw HMS hFADC_TREF_ROC1 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw 2000 1000 5000
+TH1F hFADC_TREF_ROC1_raw_tdc 'Raw HMS hFADC_TREF_ROC1 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw 3000 3000 9000
 TH1F hFADC_TREF_ROC1_adc_mult 'HMS hFADC_TREF_ROC1 ADC Multiplicity; ADC Multiplicity; Counts / 1' T.coin.hFADC_TREF_ROC1_adcMultiplicity 15 0 5
-TH1F hFADC_TREF_ROC1_mult1  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=1; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  2000 1000 5000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==1
-TH1F hFADC_TREF_ROC1_mult2  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=2; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  2000 1000 5000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==2
-TH1F hFADC_TREF_ROC1_mult3  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=3; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  2000 1000 5000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==3 
+TH1F hFADC_TREF_ROC1_mult1  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=1; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  3000 3000 9000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==1
+TH1F hFADC_TREF_ROC1_mult2  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=2; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  3000 3000 9000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==2
+TH1F hFADC_TREF_ROC1_mult3  'Raw HMS hFADC_TREF_ROC1 ADC Time, Mult=3; Raw ADC Time (ns); Counts / 0.1 ns;'  T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw  3000 3000 9000 T.coin.hFADC_TREF_ROC1_adcMultiplicity==3 

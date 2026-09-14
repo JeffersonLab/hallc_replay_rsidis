@@ -13,6 +13,7 @@ void run_shms_reference_time_setup(TString infile, int RunNumber, TString outfil
     gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
     gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
     gHcParms->Load(gHcParms->GetString("g_ctp_ptrigdet_filename"));
+    gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
   }
   
   // Load SHMS parameters for COIN trigger configuration
