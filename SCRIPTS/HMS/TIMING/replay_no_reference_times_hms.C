@@ -1,7 +1,7 @@
 #include "MultiFileRun.h"
 
-void replay_no_reference_times_hms(Int_t RunNumber=0, Int_t MaxEvent=0,
-                                   Int_t FirstEvent = 1, Int_t MaxSegment = -1) {
+void replay_no_reference_times_hms (Int_t RunNumber=0, Int_t MaxEvent=0,
+                                    Int_t FirstEvent = 1, Int_t MaxSegment = -1) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -18,8 +18,9 @@ void replay_no_reference_times_hms(Int_t RunNumber=0, Int_t MaxEvent=0,
     }
   }
 
+
   // Create file name patterns.
-  // const char* RunFileNamePattern = "rsidis_production_%05d.dat.0";
+  const char* RunFileNamePattern = "rsidis_production_%05d.dat.0";
   vector<TString> pathList;
   // pathList.push_back("/net/cdaq/cdaql4data/hccoda/data/raw");
   pathList.push_back(".");
@@ -184,7 +185,12 @@ void replay_no_reference_times_hms(Int_t RunNumber=0, Int_t MaxEvent=0,
   // Define output DEF-file 
   analyzer->SetOdefFile("DEF-files/HMS/PRODUCTION/hstackana_production.def");
   // Define cuts file
-  analyzer->SetOdefFile("DEF-files/HMS/TIMING/no_reference_times.def");
+  if (RunNumber <= 27000) {
+    analyzer->SetOdefFile("DEF-files/HMS/TIMING/no_reference_times.def");
+  }
+  else {
+    analyzer->SetOdefFile("DEF-files/HMS/TIMING/no_reference_times_phaseII.def");
+  }
 
   // Define cuts file
   //These do not appear to effect the study on reference times.  Leaving in.

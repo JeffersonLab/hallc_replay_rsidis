@@ -61,7 +61,7 @@ void replay_no_reference_times_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   //Now remove all Timing Windows and revert to 
   //the default values specifid in hallc_replay
   gHcParms->AddString("g_ctp_no_timing_windows_filename", "PARAM/SHMS/GEN/pdet_cuts_no_timing_windows.param");
-  gHcParms->Load(gHcParms->GetString("g_ctp_no_hms_timing_windows_filename"));
+  gHcParms->Load(gHcParms->GetString("g_ctp_no_timing_windows_filename"));
   gHcParms->AddString("g_ctp_no_hms_timing_windows_filename", "PARAM/HMS/GEN/hdet_cuts_no_timing_windows.param");
   gHcParms->Load(gHcParms->GetString("g_ctp_no_hms_timing_windows_filename"));
 
@@ -212,11 +212,11 @@ void replay_no_reference_times_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   // electrons in SHMS, protons in HMS
   // ---------------------------------
   // Add physics module to calculate primary (scattered electrons) beam kinematics
-  THcPrimaryKine* pkin_primary = new THcPrimaryKine("H.kin.primary", "HMS Single Arm Kinematics", "H", "H.rb");
-  gHaPhysics->Add(pkin_primary);
+  THcPrimaryKine* hkin_primary = new THcPrimaryKine("H.kin.primary", "HMS Single Arm Kinematics", "H", "H.rb");
+  gHaPhysics->Add(hkin_primary);
   // Add physics module to calculate secondary (scattered hadrons) beam kinematics
-  THcSecondaryKine* hkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
-  gHaPhysics->Add(hkin_secondary);
+  THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
+  gHaPhysics->Add(pkin_secondary);
  
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Global Objects & Event Handlers
@@ -283,7 +283,12 @@ void replay_no_reference_times_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0,
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("DEF-files/COIN/TIMING/no_reference_times.def");
+  if (RunNumber <= 27000) {
+    analyzer->SetOdefFile("DEF-files/COIN/TIMING/no_reference_times.def");
+  }
+  else {
+    analyzer->SetOdefFile("DEF-files/COIN/TIMING/no_reference_times_phaseII.def");
+  }
   // Define cuts file
   analyzer->SetCutFile("DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
   // Start the actual analysis.
