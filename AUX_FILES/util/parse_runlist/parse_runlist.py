@@ -86,4 +86,5 @@ def parse_runlist_file(input_filename, output_filename):
 
 # Run the parser
 if __name__ == "__main__":
+    #parse_runlist_file("../../rsidis_runlist.dat", "parsed_runlist.csv")
     parse_runlist_file("../../rsidis_runlist_phaseII.dat", "parsed_runlist_phase2.csv")
