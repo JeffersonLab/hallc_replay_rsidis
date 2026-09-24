@@ -13285,7 +13285,15 @@ ppcentral = 3.632
 hpartmass = 0.000511
 ppartmass = 0.13957
 
-## MARKED JUNK ## Run 25304
+25304 - 25304
+gpbeam = 10.6716
+gtargmass_amu = 26.981539
+htheta_lab = -16.750
+hpcentral = 3.642
+ptheta_lab = 10.305
+ppcentral = 3.632
+hpartmass = 0.000511
+ppartmass = 0.13957
 
 25305 - 25305
 gpbeam = 10.6716
