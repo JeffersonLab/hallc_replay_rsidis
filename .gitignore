@@ -11,6 +11,7 @@
 .nfs*
 *.root
 *.xpm
+bcmcurrent*.param
 
 # Directories
 RAID
@@ -28,3 +29,7 @@ scratch
 hcana
 
 .vscode/
+
+# Python bytecode caches
+__pycache__/
+*.py[cod]
