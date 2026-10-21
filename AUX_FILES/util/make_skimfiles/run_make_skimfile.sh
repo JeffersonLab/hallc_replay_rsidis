@@ -20,16 +20,16 @@
 
 # list of arguments
 run=$1            # run number
-runtype=$2        # run type : SIDIS / HEEP / HMSDIS / SHMSDIS
+runtype=$2        # run type : SIDIS / HMSHEEP / SHMSHEEP / HMSDIS / SHMSDIS
 indir=$3          # input directory
 outdir=$4         # output directory
 run_on_ifarm=$5   # want to run on ifarm instead of batch farm? 1 => yes
 SCRIPT_DIR=$6     # Full path to directory that includes make_skimmed_rootfile.C
+reportdir=${7:-$indir} # report directory; defaults to input ROOT directory
 
 # Basic validation
 if [[ -z "$run" || -z "$runtype" || -z "$indir" || -z "$outdir" ]]; then
-    echo "Usage: $0 <run_number> <runtype> <input_dir> <output_dir>"
-    echo "Or set environment variables: RUN, RUNTYPE, INDIR, OUTDIR"
+    echo "Usage: $0 <run_number> <runtype> <input_dir> <output_dir> <run_on_ifarm> <script_dir> [report_dir]"
     exit 1
 fi
 
@@ -49,7 +49,7 @@ module use /group/halla/modulefiles
 module load analyzer/1.7.12
 
 # Run analyzer for this single run
-analyzer -b -q "$SCRIPT_DIR/make_skimmed_rootfile.C(${run}, \"${runtype}\", \"${indir}\", \"${SWIF_JOB_WORK_DIR}\")"
+analyzer -b -q "$SCRIPT_DIR/make_skimmed_rootfile.C(${run}, \"${runtype}\", \"${indir}\", \"${SWIF_JOB_WORK_DIR}\", \"${reportdir}\")"
 
 # move the output file to out directory
 mv skimmed*.root $outdir

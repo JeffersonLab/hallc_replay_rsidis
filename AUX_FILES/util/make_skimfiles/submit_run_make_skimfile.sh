@@ -20,9 +20,10 @@
 SCRIPT_DIR=/u/group/c-rsidis/pdbforce/pass1_prep/statscounter/hallc_replay_rsidis/AUX_FILES/util/make_skimfiles
 
 runlist=$1        # run list (single column txt file w/ run numbers to analyze)
-runtype=$2        # run type : SIDIS / HEEP / HMSDIS / SHMSDIS
+runtype=$2        # run type : SIDIS / HMSHEEP / SHMSHEEP / HMSDIS / SHMSDIS
 indir=$3          # input directory (directory with R-SIDIS hcana ROOT files)
 run_on_ifarm=$4   # want to run on ifarm instead of batch farm? 1 => yes
+reportdir=${5:-$indir} # report directory; defaults to input ROOT directory
 
 workflowname="rsidis-pass1-${runtype}-skimmed"
 outdirpath="/lustre24/expphy/volatile/hallc/c-rsidis/pdbforce/replay/pass1_skimmed"     # output directory (destination for the generated skim files)
@@ -33,9 +34,9 @@ jtime='2h'       # per-job requested walltime
 jdisk='5GB'      # per-job requested disk space (very important to specify)
 
 # Sanity check 1: Validating the number of arguments provided
-if [[ "$#" -ne 4 ]]; then
+if [[ "$#" -lt 4 || "$#" -gt 5 ]]; then
     echo -e "\n--!--\n Illegal number of arguments!!"
-    echo -e " This script expects 4 arguments: <runlist> <runtype> <indir> <run_on_ifarm>\n"
+    echo -e " This script expects: <runlist> <runtype> <indir> <run_on_ifarm> [reportdir]\n"
     exit;
 else 
     echo -e '\n------'
@@ -73,7 +74,7 @@ while read run; do
     # Define the base script path
     script_path=$SCRIPT_DIR'/run_make_skimfile.sh'
     # Define the arguments
-    args="${run} ${runtype} ${indir} ${outdirpath} ${run_on_ifarm} ${SCRIPT_DIR}"
+    args="${run} ${runtype} ${indir} ${outdirpath} ${run_on_ifarm} ${SCRIPT_DIR} ${reportdir}"
     
     if [[ $run_on_ifarm -ne 1 ]]; then
         swif2 add-job \
@@ -98,4 +99,9 @@ if [[ $run_on_ifarm -ne 1 ]]; then
 fi
 
 # Example execution
-#./submit_run_make_skimfile.sh heep_pass1_final.txt HEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0
+# Use HMSHEEP when the electron is in HMS, or SHMSHEEP when it is in SHMS.
+#./submit_run_make_skimfile.sh runlists/pass1/heep_pass1_final.txt HMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0
+#./submit_run_make_skimfile.sh runlists/pass1/heep_pass1_final.txt SHMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0
+#./submit_run_make_skimfile.sh runlists/pass1/hms_pass1_final.txt HMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0
+#./submit_run_make_skimfile.sh runlists/pass1/shms_pass1_final.txt SHMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0
+#./submit_run_make_skimfile.sh runlists/pass1/coin_pass1_final.txt SIDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0

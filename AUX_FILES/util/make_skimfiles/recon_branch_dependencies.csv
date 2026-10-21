@@ -1,0 +1,40 @@
+output_branch,runtypes,direct_inputs,source
+mmass,SIDIS,"original H.kin.primary q four-vector,original P.gtr lab momentum,report target/SHMS masses","sqrt(abs((target+q-detected)^2)); massive recoil convention"
+H_gtr_p_recon,"SIDIS,HMSHEEP,SHMSHEEP,HMSDIS",H.gtr.p,"original plus zero-default HMS momentum offset"
+H_gtr_th_recon,"SIDIS,HMSHEEP,SHMSHEEP,HMSDIS",H.gtr.th,"original plus zero-default HMS theta offset"
+P_gtr_p_recon,"SIDIS,HMSHEEP,SHMSHEEP,SHMSDIS",P.gtr.p,"original plus zero-default SHMS momentum offset"
+P_gtr_th_recon,"SIDIS,HMSHEEP,SHMSHEEP,SHMSDIS",P.gtr.th,"original plus zero-default SHMS theta offset"
+H_kin_primary_x_bj_recon,"SIDIS,HMSHEEP","required H.rb.px/py/pz,H reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+H_kin_primary_Q2_recon,"SIDIS,HMSHEEP","required H.rb.px/py/pz,H reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+H_kin_primary_nu_recon,"SIDIS,HMSHEEP","required H.rb.px/py/pz,H reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+H_kin_primary_W_recon,"SIDIS,HMSHEEP","required H.rb.px/py/pz,H reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+P_kin_primary_x_bj_recon,SHMSHEEP,"required P.rb.px/py/pz,P reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+P_kin_primary_Q2_recon,SHMSHEEP,"required P.rb.px/py/pz,P reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+P_kin_primary_nu_recon,SHMSHEEP,"required P.rb.px/py/pz,P reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+P_kin_primary_W_recon,SHMSHEEP,"required P.rb.px/py/pz,P reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+H_kin_x_bj_recon,HMSDIS,"required H.rb.px/py/pz,H reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+H_kin_Q2_recon,HMSDIS,"required H.rb.px/py/pz,H reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+H_kin_nu_recon,HMSDIS,"required H.rb.px/py/pz,H reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+H_kin_W_recon,HMSDIS,"required H.rb.px/py/pz,H reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+P_kin_x_bj_recon,SHMSDIS,"required P.rb.px/py/pz,P reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+P_kin_Q2_recon,SHMSDIS,"required P.rb.px/py/pz,P reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+P_kin_nu_recon,SHMSDIS,"required P.rb.px/py/pz,P reconstructed lab vector,electron mass",recon_hcana-style primary kinematics
+P_kin_W_recon,SHMSDIS,"required P.rb.px/py/pz,P reconstructed lab vector,electron/proton masses",recon_hcana-style primary kinematics
+P_kin_secondary_th_xq_recon,"SIDIS,HMSHEEP","primary q,P reconstructed lab vector",THcSecondaryKine
+P_kin_secondary_ph_xq_recon,"SIDIS,HMSHEEP","primary q,P reconstructed lab vector",THcSecondaryKine
+P_kin_secondary_emiss_recon,HMSHEEP,"primary nu,target mass,P reconstructed energy",THcSecondaryKine
+P_kin_secondary_pmiss_y_recon,HMSHEEP,"primary q,P reconstructed lab vector",THcSecondaryKine
+P_kin_secondary_pmiss_z_recon,HMSHEEP,"primary q,P reconstructed lab vector",THcSecondaryKine
+H_kin_secondary_th_xq_recon,SHMSHEEP,"primary q,H reconstructed lab vector",THcSecondaryKine
+H_kin_secondary_ph_xq_recon,SHMSHEEP,"primary q,H reconstructed lab vector",THcSecondaryKine
+H_kin_secondary_emiss_recon,SHMSHEEP,"primary nu,target mass,H reconstructed energy",THcSecondaryKine
+H_kin_secondary_pmiss_y_recon,SHMSHEEP,"primary q,H reconstructed lab vector",THcSecondaryKine
+H_kin_secondary_pmiss_z_recon,SHMSHEEP,"primary q,H reconstructed lab vector",THcSecondaryKine
+z_wHadMom,SIDIS,"P.gtr.p,H.kin.primary.nu","p_h/nu; hadron-momentum convention"
+z_wHadMom_recon,SIDIS,"P_gtr_p_recon,H_kin_primary_nu_recon","p_h,recon/nu_recon; hadron-momentum convention"
+z_wHadEn,SIDIS,"P.gtr.p,H.kin.primary.nu,report SHMS Particle Mass","sqrt(p_h^2+m_h^2)/nu; standard hadron-energy convention"
+z_wHadEn_recon,SIDIS,"P_gtr_p_recon,H_kin_primary_nu_recon,report SHMS Particle Mass","sqrt(p_h,recon^2+m_h^2)/nu_recon; standard hadron-energy convention"
+pt_recon,SIDIS,"P_gtr_p_recon,P_kin_secondary_th_xq_recon",make_skimmed_rootfile.C
+ptx_recon,SIDIS,"pt_recon,P_kin_secondary_ph_xq_recon",make_skimmed_rootfile.C
+pty_recon,SIDIS,"pt_recon,P_kin_secondary_ph_xq_recon",make_skimmed_rootfile.C
+mmass_recon,SIDIS,"reconstructed recoil energy and missing-momentum magnitude","sqrt(abs((target+q_recon-detected_recon)^2)); massive recon_hcana convention"
