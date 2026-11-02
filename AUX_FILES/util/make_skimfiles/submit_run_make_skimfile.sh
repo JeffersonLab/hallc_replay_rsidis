@@ -110,5 +110,5 @@ fi
 #./submit_run_make_skimfile.sh runlists/pass1/sidis_pass1_final_for_skimming_incl_field_instb_runs.txt SIDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
 #./submit_run_make_skimfile.sh runlists/pass1/shmsheep_pass1_final_for_skimming.txt SHMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
 #./submit_run_make_skimfile.sh runlists/pass1/hmsheep_pass1_final_for_skimming.txt HMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
-#./submit_run_make_skimfile.sh runlists/pass1/hmsdis_pass1_final_for_skimming_incl_field_instb_runs.txt HMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
-#./submit_run_make_skimfile.sh runlists/pass1/shmsdis_pass1_final_for_skimming.txt SHMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/hmsdis_pass1_final_for_skimming_incl_field_instb_runs.txt HMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/HMS/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/shmsdis_pass1_final_for_skimming.txt SHMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/SHMS/PRODUCTION
