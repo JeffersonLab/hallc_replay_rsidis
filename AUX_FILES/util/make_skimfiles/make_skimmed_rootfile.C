@@ -342,10 +342,16 @@ std::vector<std::string> shmsHeepVars = {
     "H.rb.raster.frxaRawAdc", "H.rb.raster.frxbRawAdc", "H.rb.raster.fryaRawAdc", "H.rb.raster.frybRawAdc",
     "P.rb.raster.frxaRawAdc", "P.rb.raster.frxbRawAdc", "P.rb.raster.fryaRawAdc", "P.rb.raster.frybRawAdc"};
 
-// // BCM variables
-// std::vector<std::string> bcmVars = {
-//   "ibcm1", "ibcm2"
-// };
+// BCM variables
+std::vector<std::string> hmsBCMVars = { // for hmsdis/hmshee
+  "H.bcm.CurrentFlag", "H.bcm.bcm1.AvgCurrent",
+  "H.bcm.bcm2.AvgCurrent", "H.bcm.bcm4a.AvgCurrent",
+  "H.bcm.bcm4b.AvgCurrent", "H.bcm.bcm4c.AvgCurrent"};
+
+std::vector<std::string> shmsBCMVars = { // applicable for shmsdis/shmshee/coin/all heep
+  "P.bcm.CurrentFlag", "P.bcm.bcm1.AvgCurrent",
+  "P.bcm.bcm2.AvgCurrent", "P.bcm.bcm4a.AvgCurrent",
+  "P.bcm.bcm4b.AvgCurrent", "P.bcm.bcm4c.AvgCurrent"};
 
 // Assemble the snapshot branch list appropriate to the requested run type.
 std::vector<std::string> get_varnames(const std::string &runtype)
@@ -362,7 +368,7 @@ std::vector<std::string> get_varnames(const std::string &runtype)
     auto vars = shmsVars;
     vars.insert(vars.end(), hmsVars.begin(), hmsVars.end());
     vars.insert(vars.end(), ctimeVars.begin(), ctimeVars.end());
-    // vars.insert(vars.end(), bcmVars.begin(), bcmVars.end());
+    vars.insert(vars.end(), shmsBCMVars.begin(), shmsBCMVars.end());
     return vars;
   }
   else if (runtype == "HMSHEEP")
@@ -370,6 +376,7 @@ std::vector<std::string> get_varnames(const std::string &runtype)
     auto vars = shmsVars;
     vars.insert(vars.end(), hmsVars.begin(), hmsVars.end());
     vars.insert(vars.end(), hmsHeepVars.begin(), hmsHeepVars.end());
+    vars.insert(vars.end(), shmsBCMVars.begin(), shmsBCMVars.end());    
     return vars;
   }
   else if (runtype == "SHMSHEEP")
@@ -377,21 +384,21 @@ std::vector<std::string> get_varnames(const std::string &runtype)
     auto vars = shmsVars;
     vars.insert(vars.end(), hmsVars.begin(), hmsVars.end());
     vars.insert(vars.end(), shmsHeepVars.begin(), shmsHeepVars.end());
-    // vars.insert(vars.end(), bcmVars.begin(), bcmVars.end());
+    vars.insert(vars.end(), shmsBCMVars.begin(), shmsBCMVars.end());
     return vars;
   }
   else if (runtype == "SHMSDIS")
   {
     auto vars = shmsVars;
     vars.insert(vars.end(), shmskinVars.begin(), shmskinVars.end());
-    // vars.insert(vars.end(), bcmVars.begin(), bcmVars.end());
+    vars.insert(vars.end(), shmsBCMVars.begin(), shmsBCMVars.end());
     return vars;
   }
   else if (runtype == "HMSDIS")
   {
     auto vars = hmsVars;
     vars.insert(vars.end(), hmskinVars.begin(), hmskinVars.end());
-    // vars.insert(vars.end(), bcmVars.begin(), bcmVars.end());
+    vars.insert(vars.end(), hmsBCMVars.begin(), hmsBCMVars.end());
     return vars;
   }
   else
