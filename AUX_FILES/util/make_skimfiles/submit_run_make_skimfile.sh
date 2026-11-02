@@ -25,7 +25,7 @@ indir=$3          # input directory (directory with R-SIDIS hcana ROOT files)
 run_on_ifarm=$4   # want to run on ifarm instead of batch farm? 1 => yes
 reportdir=${5:-$indir} # report directory; defaults to input ROOT directory
 
-workflowname="rsidis-pass1-${runtype}-skimmed"
+workflowname="rsidis-pass1-${runtype}-skimmed-w-recon-br"
 outdirpath="/lustre24/expphy/volatile/hallc/c-rsidis/pdbforce/replay/pass1_skimmed"     # output directory (destination for the generated skim files)
 
 # Job specifications
@@ -105,3 +105,10 @@ fi
 #./submit_run_make_skimfile.sh runlists/pass1/hms_pass1_final.txt HMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0
 #./submit_run_make_skimfile.sh runlists/pass1/shms_pass1_final.txt SHMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0
 #./submit_run_make_skimfile.sh runlists/pass1/coin_pass1_final.txt SIDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0
+
+# for pass1 w/ recon br PD used
+#./submit_run_make_skimfile.sh runlists/pass1/sidis_pass1_final_for_skimming_incl_field_instb_runs.txt SIDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/shmsheep_pass1_final_for_skimming.txt SHMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/hmsheep_pass1_final_for_skimming.txt HMSHEEP /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/hmsdis_pass1_final_for_skimming_incl_field_instb_runs.txt HMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
+#./submit_run_make_skimfile.sh runlists/pass1/shmsdis_pass1_final_for_skimming.txt SHMSDIS /cache/hallc/c-rsidis/analysis/replays/pass1 0 /w/hallc-scshelf2102/c-rsidis/replay/pass1/REPORT_OUTPUT/COIN/PRODUCTION
