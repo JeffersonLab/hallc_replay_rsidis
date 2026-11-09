@@ -26,6 +26,7 @@ block H.gtr.*
 block H.kin.*
 block H.react.*
 block H.rb.*
+block H.*goodAdcTdcDiffTime
 
 # Commented out prior to light.def
 # block H.tr.*
@@ -74,6 +75,7 @@ block P.gtr.*
 block P.kin.*
 block P.react.*
 block P.rb.*
+block P.*goodAdcTdcDiffTime
 
 # Commented out prior to light.def
 # block P.tr.*
