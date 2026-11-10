@@ -1,9 +1,5 @@
 ;SHMS Hodoscope Cut parameters for removing timing windows
 
-; phodo_adc_tdc_offset is array of time offsets for all paddles in a plane
-;   to move the ADC pulse time after reference time subtraction to a reasonable time (ns).
-
-;Wide open Timing Windows
 phodo_PosAdcTimeWindowMin = -200., -200., -200., -200.,
            		    -200., -200., -200., -200.,
                       	    -200., -200., -200., -200.,

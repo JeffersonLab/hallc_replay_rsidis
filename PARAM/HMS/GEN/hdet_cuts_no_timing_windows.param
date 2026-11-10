@@ -1,4 +1,3 @@
-;Points to cuts defined for f2-emc, but with wide open
 ;Reference Time Cuts
 ;HMS default cut parameter files
 #include "PARAM/HMS/CER/hcer_cuts_no_timing_windows.param"
