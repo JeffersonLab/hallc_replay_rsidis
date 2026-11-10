@@ -1,8 +1,6 @@
 ;HMS Hodo Cut parameters for removing timing windows
 
-hhodo_adc_tdc_offset = 145., 145., 145., 145.
-
-hhodo_AdcPosTimeWindowMin = -200., -200., -200., -200.,
+hhodo_PosAdcTimeWindowMin = -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
  			    -200., -200., -200., -200.,
@@ -19,7 +17,7 @@ hhodo_AdcPosTimeWindowMin = -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
 			    -200., -200., -200., -200.
 
-hhodo_AdcPosTimeWindowMax = 200., 200., 200., 200.,
+hhodo_PosAdcTimeWindowMax = 200., 200., 200., 200.,
 			    200., 200., 200., 200.,
 			    200., 200., 200., 200.,
   	                    200., 200., 200., 200.,
@@ -36,7 +34,7 @@ hhodo_AdcPosTimeWindowMax = 200., 200., 200., 200.,
 			    200., 200., 200., 200.,
 			    200., 200., 200., 200.
 
-hhodo_AdcNegTimeWindowMin = -200., -200., -200., -200.,
+hhodo_NegAdcTimeWindowMin = -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
@@ -53,7 +51,7 @@ hhodo_AdcNegTimeWindowMin = -200., -200., -200., -200.,
 			    -200., -200., -200., -200.,
 			    -200., -200., -200., -200.
 
-hhodo_AdcNegTimeWindowMax = 200., 200., 200., 200.,
+hhodo_NegAdcTimeWindowMax = 200., 200., 200., 200.,
 			    200., 200., 200., 200.,
 			    200., 200., 200., 200.,
 			    200., 200., 200., 200.,

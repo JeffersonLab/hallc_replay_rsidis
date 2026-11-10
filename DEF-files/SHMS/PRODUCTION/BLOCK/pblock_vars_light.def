@@ -19,6 +19,7 @@ block P.kin.*
 block P.react.*
 block P.rb.*
 block P.bcm.*
+block P.*goodAdcTdcDiffTime
 
 # Commented out prior to light.def
 # block P.tr.*
